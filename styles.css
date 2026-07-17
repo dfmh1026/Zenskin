@@ -396,8 +396,9 @@ h2 .acento, h3 .acento {
   display: flex;
   transition: transform .5s ease;
 }
+.card__slides > picture { min-width: 100%; display: block; }
 .card__slides img {
-  min-width: 100%;
+  width: 100%;
   height: 200px;
   object-fit: cover;
   display: block;

@@ -43,9 +43,10 @@ Leyenda: `[x]` hecho · `[~]` parcial · `[ ]` pendiente
 
 ## 6. Rendimiento
 - [x] `loading="lazy"` en imágenes
-- [ ] ⚠️ Optimizar el logo (pesa 1.3 MB — debería ser < 200 KB)
-- [ ] Convertir imágenes a formato moderno (WebP)
-- [ ] Definir `width`/`height` en imágenes para evitar saltos de layout
+- [x] Optimizar el logo (1.3 MB → 76 KB, −94%)
+- [x] Convertir imágenes a formato moderno (WebP) con `<picture>` + respaldo JPEG
+- [x] Script reutilizable `optimizar-imagenes.mjs` para futuras imágenes
+- [x] Definir `width`/`height` en las fotos para evitar saltos de layout
 - [ ] Revisar puntuación en Lighthouse / PageSpeed
 
 ## 7. SEO
