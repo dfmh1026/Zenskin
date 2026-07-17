@@ -384,6 +384,68 @@ h2 .acento, h3 .acento {
 .card h3 { color: var(--oro-claro); }
 .card p { color: rgba(247, 244, 236, 0.75); font-size: .98rem; }
 
+/* tarjeta con carrusel de fotos del procedimiento */
+.card--media { padding-top: 0; }
+.card__gallery {
+  position: relative;
+  /* rompe el padding de la tarjeta para llegar a los bordes */
+  margin: 0 -1.8rem 1.6rem;
+  overflow: hidden;
+}
+.card__slides {
+  display: flex;
+  transition: transform .5s ease;
+}
+.card__slides img {
+  min-width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+/* flechas de navegación */
+.gallery__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(7, 35, 26, 0.55);
+  color: var(--perla);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  backdrop-filter: blur(2px);
+  transition: background .25s ease, transform .25s ease;
+}
+.gallery__nav:hover { background: var(--oro); color: var(--verde-noche); }
+.gallery__nav--prev { left: 10px; }
+.gallery__nav--next { right: 10px; }
+.gallery__nav:active { transform: translateY(-50%) scale(.9); }
+/* puntos indicadores */
+.gallery__dots {
+  position: absolute;
+  bottom: 10px;
+  left: 0; right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+}
+.gallery__dots button {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(247, 244, 236, 0.5);
+  cursor: pointer;
+  transition: background .25s ease, transform .25s ease;
+}
+.gallery__dots button.active { background: var(--oro-claro); transform: scale(1.3); }
+
 /* testimonios (slider) */
 .slider { margin-top: 2rem; overflow: hidden; }
 .slider__track {

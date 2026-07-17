@@ -4,7 +4,8 @@
    2. Slider de testimonios (autoplay + controles + dots)
    3. Reveal al hacer scroll (IntersectionObserver)
    4. Formulario → abre WhatsApp con el mensaje prellenado
-   5. Año dinámico en el footer
+   5. Carrusel de fotos del servicio (flechas + dots + swipe)
+   6. Año dinámico en el footer
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -117,6 +118,41 @@ document.addEventListener('DOMContentLoaded', () => {
     form.reset();
   });
 
-  /* ---------- 5. Año dinámico ---------- */
+  /* ---------- 5. Carrusel de fotos del servicio ---------- */
+  const gallerySlides = document.getElementById('facialSlides');
+  if (gallerySlides) {
+    const gImgs = gallerySlides.children;
+    const gDotsWrap = document.getElementById('facialDots');
+    let gIndex = 0;
+
+    Array.from(gImgs).forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.setAttribute('aria-label', `Ir a la foto ${i + 1}`);
+      dot.addEventListener('click', () => gGoTo(i));
+      gDotsWrap.appendChild(dot);
+    });
+    const gDots = gDotsWrap.children;
+
+    function gGoTo(i) {
+      gIndex = (i + gImgs.length) % gImgs.length;
+      gallerySlides.style.transform = `translateX(-${gIndex * 100}%)`;
+      Array.from(gDots).forEach((d, j) => d.classList.toggle('active', j === gIndex));
+    }
+
+    document.getElementById('facialPrev').addEventListener('click', () => gGoTo(gIndex - 1));
+    document.getElementById('facialNext').addEventListener('click', () => gGoTo(gIndex + 1));
+
+    // Swipe táctil
+    let gStartX = 0;
+    gallerySlides.addEventListener('touchstart', e => { gStartX = e.touches[0].clientX; }, { passive: true });
+    gallerySlides.addEventListener('touchend', e => {
+      const delta = e.changedTouches[0].clientX - gStartX;
+      if (Math.abs(delta) > 40) gGoTo(gIndex + (delta < 0 ? 1 : -1));
+    }, { passive: true });
+
+    gGoTo(0);
+  }
+
+  /* ---------- 6. Año dinámico ---------- */
   document.getElementById('year').textContent = new Date().getFullYear();
 });
