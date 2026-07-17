@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zen Skin Studio — Centro de Estética</title>
+  <meta name="description" content="Zen Skin Studio: centro de estética especializado en cuidado facial y corporal. Agenda tu cita." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="responsive.css" />
+</head>
+<body>
+
+  <!-- ======= NAVBAR ======= -->
+  <header class="nav" id="inicio">
+    <div class="nav__inner">
+      <a href="#inicio" class="nav__brand">
+        <svg class="nav__lotus" viewBox="0 0 200 160" aria-hidden="true">
+          <use href="#lotus-icon"></use>
+        </svg>
+        <span class="nav__name">Z<span class="e-styled">Ɛ</span>N <em>SKIN</em></span>
+      </a>
+      <nav class="nav__links" id="navLinks" aria-label="Navegación principal">
+        <a href="#quienes-somos">Quiénes somos</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#testimonios">Testimonios</a>
+        <a href="#contacto" class="nav__cta">Agendar cita</a>
+      </nav>
+      <button class="nav__toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ======= HERO ======= -->
+    <section class="hero">
+      <div class="hero__ornament" aria-hidden="true">
+        <svg viewBox="0 0 200 160">
+          <g id="lotus-icon" fill="none" stroke="url(#goldGrad)" stroke-width="2.2" stroke-linecap="round">
+            <defs>
+              <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#E8CE8C"/>
+                <stop offset="55%" stop-color="#C9A24B"/>
+                <stop offset="100%" stop-color="#9C7A2E"/>
+              </linearGradient>
+            </defs>
+            <!-- pétalo central -->
+            <path d="M100 8 C 88 40, 88 78, 100 108 C 112 78, 112 40, 100 8 Z"/>
+            <path d="M100 26 C 94 48, 94 78, 100 96 C 106 78, 106 48, 100 26 Z"/>
+            <!-- pétalos laterales -->
+            <path d="M100 108 C 78 96, 58 74, 54 44 C 78 52, 94 76, 100 108 Z"/>
+            <path d="M100 108 C 122 96, 142 74, 146 44 C 122 52, 106 76, 100 108 Z"/>
+            <path d="M100 108 C 70 106, 40 94, 22 68 C 52 66, 82 84, 100 108 Z"/>
+            <path d="M100 108 C 130 106, 160 94, 178 68 C 148 66, 118 84, 100 108 Z"/>
+            <!-- volutas -->
+            <path d="M32 96 q -14 6 -8 18 q 4 8 14 4"/>
+            <path d="M168 96 q 14 6 8 18 q -4 8 -14 4"/>
+          </g>
+        </svg>
+      </div>
+      <p class="hero__eyebrow">Centro de estética</p>
+      <h1 class="hero__title">Z<span class="e-styled">Ɛ</span>N <span class="gold-text">SKIN</span></h1>
+      <div class="hero__rule" aria-hidden="true"></div>
+      <p class="hero__sub">STUDIO</p>
+      <p class="hero__lead">Cuidado facial y corporal con protocolos personalizados. Tu piel, en equilibrio.</p>
+      <div class="hero__actions">
+        <a href="#contacto" class="btn btn--gold">Agendar cita</a>
+        <a href="#servicios" class="btn btn--ghost">Ver servicios</a>
+      </div>
+    </section>
+
+    <!-- ======= QUIÉNES SOMOS ======= -->
+    <section class="section section--light" id="quienes-somos">
+      <div class="section__inner grid-2">
+        <div>
+          <p class="eyebrow">Quiénes somos</p>
+          <h2>Un espacio pensado para tu piel</h2>
+          <p>En Zen Skin Studio combinamos aparatología de última generación con técnicas manuales y productos de grado profesional. Cada tratamiento inicia con una valoración de tu piel para diseñar un protocolo a tu medida.</p>
+          <p>Nuestro equipo está conformado por esteticistas certificadas con formación continua en cuidado facial, corporal y bienestar integral.</p>
+          <ul class="checklist">
+            <li>Valoración de piel sin costo en tu primera visita</li>
+            <li>Protocolos personalizados, no paquetes genéricos</li>
+            <li>Productos dermatológicamente testeados</li>
+          </ul>
+        </div>
+        <div class="about__card">
+          <div class="about__stat"><strong>+8</strong><span>años de experiencia</span></div>
+          <div class="about__stat"><strong>+1.200</strong><span>clientas atendidas</span></div>
+          <div class="about__stat"><strong>4.9★</strong><span>calificación promedio</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======= SERVICIOS ======= -->
+    <section class="section section--dark" id="servicios">
+      <div class="section__inner">
+        <p class="eyebrow eyebrow--gold">Servicios</p>
+        <h2 class="on-dark">Tratamientos destacados</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>Limpieza facial profunda</h3>
+            <p>Higiene, exfoliación, extracción e hidratación adaptadas a tu tipo de piel.</p>
+          </article>
+          <article class="card">
+            <h3>Rejuvenecimiento facial</h3>
+            <p>Protocolos con radiofrecuencia y activos concentrados para firmeza y luminosidad.</p>
+          </article>
+          <article class="card">
+            <h3>Tratamientos corporales</h3>
+            <p>Moldeamiento, drenaje linfático y relajación con enfoque en resultados medibles.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======= TESTIMONIOS ======= -->
+    <section class="section section--light" id="testimonios">
+      <div class="section__inner section__inner--narrow">
+        <p class="eyebrow">Testimonios</p>
+        <h2>Lo que dicen nuestras clientas</h2>
+        <div class="slider" id="slider">
+          <div class="slider__track" id="sliderTrack">
+            <blockquote class="testimonial">
+              <p>"Llevo seis meses con el protocolo facial y mi piel cambió por completo. La valoración inicial marca la diferencia."</p>
+              <footer>— Laura M. · Cali</footer>
+            </blockquote>
+            <blockquote class="testimonial">
+              <p>"El espacio es impecable y el trato muy profesional. Se nota que trabajan con protocolos serios, no con fórmulas genéricas."</p>
+              <footer>— Carolina R. · Palmira</footer>
+            </blockquote>
+            <blockquote class="testimonial">
+              <p>"Fui por una limpieza facial y terminé con un plan completo. Resultados visibles desde la segunda sesión."</p>
+              <footer>— Diana T. · Cali</footer>
+            </blockquote>
+          </div>
+          <div class="slider__controls">
+            <button class="slider__btn" id="prevBtn" aria-label="Testimonio anterior">‹</button>
+            <div class="slider__dots" id="sliderDots"></div>
+            <button class="slider__btn" id="nextBtn" aria-label="Testimonio siguiente">›</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======= CONTACTO ======= -->
+    <section class="section section--dark" id="contacto">
+      <div class="section__inner grid-2">
+        <div>
+          <p class="eyebrow eyebrow--gold">Contacto</p>
+          <h2 class="on-dark">Agenda tu cita</h2>
+          <p class="on-dark-muted">Escríbenos y te respondemos el mismo día. También puedes agendar directamente por WhatsApp.</p>
+          <ul class="contact-list">
+            <li><strong>WhatsApp:</strong> <a href="https://wa.me/573000000000" target="_blank" rel="noopener">+57 300 000 0000</a></li>
+            <li><strong>Instagram:</strong> <a href="#" rel="noopener">@zenskin.studio</a></li>
+            <li><strong>Dirección:</strong> Cali, Valle del Cauca</li>
+            <li><strong>Horario:</strong> Lun–Sáb · 9:00 a.m. – 7:00 p.m.</li>
+          </ul>
+        </div>
+        <form class="form" id="contactForm" novalidate>
+          <label for="name">Nombre</label>
+          <input type="text" id="name" name="name" placeholder="Tu nombre" required />
+          <label for="phone">WhatsApp</label>
+          <input type="tel" id="phone" name="phone" placeholder="300 000 0000" required />
+          <label for="service">Servicio de interés</label>
+          <select id="service" name="service">
+            <option>Limpieza facial profunda</option>
+            <option>Rejuvenecimiento facial</option>
+            <option>Tratamientos corporales</option>
+            <option>Valoración inicial</option>
+          </select>
+          <label for="message">Mensaje</label>
+          <textarea id="message" name="message" rows="3" placeholder="Cuéntanos qué necesitas"></textarea>
+          <button type="submit" class="btn btn--gold btn--full">Enviar por WhatsApp</button>
+          <p class="form__note" id="formNote" role="status"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> Zen Skin Studio · Todos los derechos reservados</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
