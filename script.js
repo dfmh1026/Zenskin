@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
   revealTargets.forEach(el => observer.observe(el));
 
   /* ---------- 4. Formulario → WhatsApp ---------- */
-  const WHATSAPP_NUMBER = '573000000000'; // ← CAMBIAR por el número real (sin + ni espacios)
+  const WHATSAPP_NUMBER = '12016472372';
 
   const form = document.getElementById('contactForm');
   const note = document.getElementById('formNote');
