@@ -72,7 +72,7 @@ h2 .acento, h3 .acento {
   background-clip: text;
   color: transparent;
 }
-.e-styled { display: inline-block; transform: scaleX(-1); } /* Ɛ del logo */
+.e-styled { display: inline-block; margin: 0 .06em; } /* Ɛ como en el logo: un "3" al revés, con aire a los lados */
 
 .eyebrow {
   display: inline-flex;
