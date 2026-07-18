@@ -1,0 +1,9 @@
+# dependencias de Node (no se suben a git)
+node_modules/
+
+# archivos del sistema
+Thumbs.db
+.DS_Store
+
+# temporales del optimizador de imágenes
+assets/__tmp_*

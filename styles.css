@@ -391,6 +391,8 @@ h2 .acento, h3 .acento {
   /* rompe el padding de la tarjeta para llegar a los bordes */
   margin: 0 -1.8rem 1.6rem;
   overflow: hidden;
+  /* fondo para las bandas cuando la foto no llena todo (proporciones distintas) */
+  background: linear-gradient(160deg, rgba(7, 35, 26, 0.55), rgba(7, 35, 26, 0.25));
 }
 .card__slides {
   display: flex;
@@ -399,9 +401,10 @@ h2 .acento, h3 .acento {
 .card__slides > picture { min-width: 100%; display: block; }
 .card__slides img {
   width: 100%;
-  height: 200px;
-  object-fit: cover;
+  aspect-ratio: 4 / 3;   /* todas las fotos estandarizadas a 4:3 */
+  object-fit: cover;     /* llena el recuadro, uniforme en todas las tarjetas */
   display: block;
+  cursor: zoom-in;       /* invita a hacer clic para ampliar */
 }
 /* flechas de navegación */
 .gallery__nav {
@@ -446,8 +449,6 @@ h2 .acento, h3 .acento {
   transition: background .25s ease, transform .25s ease;
 }
 .gallery__dots button.active { background: var(--oro-claro); transform: scale(1.3); }
-/* la foto invita a hacer clic para ampliar */
-.card__slides img { cursor: zoom-in; }
 
 /* ---------- lightbox (foto ampliada) ---------- */
 .lightbox {
