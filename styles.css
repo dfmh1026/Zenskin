@@ -450,6 +450,40 @@ h2 .acento, h3 .acento {
 }
 .gallery__dots button.active { background: var(--oro-claro); transform: scale(1.3); }
 
+/* tarjeta con video (mismo marco que las de fotos) */
+.card__video {
+  position: relative;
+  margin: 0 -1.8rem 1.6rem;
+  overflow: hidden;
+  background: var(--verde-noche);
+}
+.card__video video {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  cursor: zoom-in;
+}
+/* botón de ampliar sobre el video */
+.card__expand {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(7, 35, 26, 0.6);
+  color: var(--perla);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  backdrop-filter: blur(2px);
+  transition: background .25s ease, transform .25s ease;
+}
+.card__expand:hover { background: var(--oro); color: var(--verde-noche); transform: scale(1.08); }
+
 /* ---------- lightbox (foto ampliada) ---------- */
 .lightbox {
   position: fixed;
@@ -482,6 +516,19 @@ h2 .acento, h3 .acento {
   transition: transform .3s ease;
 }
 .lightbox.open .lightbox__img { transform: scale(1); }
+
+/* video dentro del lightbox */
+.lightbox__video {
+  display: none;
+  max-width: min(1000px, 92vw);
+  max-height: 86vh;
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  background: #000;
+}
+.lb--video .lightbox__img { display: none; }
+.lb--video .lightbox__video { display: block; }
+.lb--video .lightbox__nav { display: none; }   /* un solo video: sin flechas */
 
 .lightbox__close {
   position: absolute;

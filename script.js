@@ -123,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // -- Lightbox compartido por todas las galerías --
   const lb = document.getElementById('lightbox');
   const lbImg = document.getElementById('lbImg');
+  const lbVideo = document.getElementById('lbVideo');
   let lbPhotos = [];   // fotos de la galería que se abrió
   let lbIndex = 0;
 
@@ -131,6 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
     lbImg.alt = lbPhotos[lbIndex].alt;
   }
   function openLb(photos, i) {
+    lb.classList.remove('lb--video');          // modo imagen
+    if (lbVideo) { lbVideo.pause(); lbVideo.removeAttribute('src'); }
     lbPhotos = photos;
     lbIndex = (i + photos.length) % photos.length;
     showLb();
@@ -138,10 +141,20 @@ document.addEventListener('DOMContentLoaded', () => {
     lb.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
   }
+  function openLbVideo(src) {
+    lbPhotos = [];                              // sin navegación
+    lb.classList.add('lb--video');             // modo video
+    lbVideo.src = src;
+    lb.classList.add('open');
+    lb.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    lbVideo.play().catch(() => {});
+  }
   function closeLb() {
     lb.classList.remove('open');
     lb.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    if (lbVideo) lbVideo.pause();               // detiene el sonido al cerrar
   }
   function lbGo(step) {
     if (!lbPhotos.length) return;
@@ -215,6 +228,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   ['facial', 'acne', 'hilos', 'botox'].forEach(initGallery);
+
+  // -- Tarjetas con video: clic para ampliar (con sonido) --
+  document.querySelectorAll('.card__video').forEach(cv => {
+    const vid = cv.querySelector('video');
+    const open = () => openLbVideo(vid.currentSrc || vid.getAttribute('src'));
+    vid.addEventListener('click', open);
+    const btn = cv.querySelector('.card__expand');
+    if (btn) btn.addEventListener('click', open);
+  });
 
   /* ---------- 6. Año dinámico ---------- */
   document.getElementById('year').textContent = new Date().getFullYear();
