@@ -456,10 +456,14 @@ h2 .acento, h3 .acento {
   margin: 0 -1.8rem 1.6rem;
   overflow: hidden;
   background: var(--verde-noche);
+  aspect-ratio: 4 / 3;        /* el MARCO define la proporción, no el video */
 }
+/* el video llena el marco y se recorta, funcione en el navegador que funcione */
 .card__video video {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  height: 100%;
   object-fit: cover;
   display: block;
   cursor: zoom-in;
