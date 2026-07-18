@@ -4,7 +4,7 @@
    2. Slider de testimonios (autoplay + controles + dots)
    3. Reveal al hacer scroll (IntersectionObserver)
    4. Formulario → abre WhatsApp con el mensaje prellenado
-   5. Carrusel de fotos del servicio (flechas + dots + swipe)
+   5. Carrusel de fotos del servicio (flechas + dots + swipe + lightbox)
    6. Año dinámico en el footer
    ============================================================ */
 
@@ -118,40 +118,103 @@ document.addEventListener('DOMContentLoaded', () => {
     form.reset();
   });
 
-  /* ---------- 5. Carrusel de fotos del servicio ---------- */
-  const gallerySlides = document.getElementById('facialSlides');
-  if (gallerySlides) {
-    const gImgs = gallerySlides.children;
-    const gDotsWrap = document.getElementById('facialDots');
-    let gIndex = 0;
+  /* ---------- 5. Carruseles de fotos + lightbox compartido ---------- */
 
-    Array.from(gImgs).forEach((_, i) => {
+  // -- Lightbox compartido por todas las galerías --
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  let lbPhotos = [];   // fotos de la galería que se abrió
+  let lbIndex = 0;
+
+  function showLb() {
+    lbImg.src = lbPhotos[lbIndex].src;
+    lbImg.alt = lbPhotos[lbIndex].alt;
+  }
+  function openLb(photos, i) {
+    lbPhotos = photos;
+    lbIndex = (i + photos.length) % photos.length;
+    showLb();
+    lb.classList.add('open');
+    lb.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLb() {
+    lb.classList.remove('open');
+    lb.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+  function lbGo(step) {
+    if (!lbPhotos.length) return;
+    lbIndex = (lbIndex + step + lbPhotos.length) % lbPhotos.length;
+    showLb();
+  }
+
+  if (lb) {
+    document.getElementById('lbClose').addEventListener('click', closeLb);
+    document.getElementById('lbPrev').addEventListener('click', () => lbGo(-1));
+    document.getElementById('lbNext').addEventListener('click', () => lbGo(1));
+    // cerrar al tocar el fondo (fuera de la imagen y de los botones)
+    lb.addEventListener('click', e => {
+      if (e.target === lb || e.target.classList.contains('lightbox__figure')) closeLb();
+    });
+    // teclado: Esc cierra, flechas navegan
+    document.addEventListener('keydown', e => {
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLb();
+      else if (e.key === 'ArrowRight') lbGo(1);
+      else if (e.key === 'ArrowLeft') lbGo(-1);
+    });
+    // swipe en el lightbox (móvil)
+    let lbStartX = 0;
+    lb.addEventListener('touchstart', e => { lbStartX = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', e => {
+      const delta = e.changedTouches[0].clientX - lbStartX;
+      if (Math.abs(delta) > 40) lbGo(delta < 0 ? 1 : -1);
+    }, { passive: true });
+  }
+
+  // -- Inicializa un carrusel por su prefijo de IDs (ej: 'facial', 'acne') --
+  function initGallery(prefix) {
+    const slides = document.getElementById(prefix + 'Slides');
+    if (!slides) return;
+    const imgs = slides.children;
+    const photoEls = slides.querySelectorAll('img');
+    const dotsWrap = document.getElementById(prefix + 'Dots');
+    let index = 0;
+
+    Array.from(imgs).forEach((_, i) => {
       const dot = document.createElement('button');
       dot.setAttribute('aria-label', `Ir a la foto ${i + 1}`);
-      dot.addEventListener('click', () => gGoTo(i));
-      gDotsWrap.appendChild(dot);
+      dot.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(dot);
     });
-    const gDots = gDotsWrap.children;
+    const dots = dotsWrap.children;
 
-    function gGoTo(i) {
-      gIndex = (i + gImgs.length) % gImgs.length;
-      gallerySlides.style.transform = `translateX(-${gIndex * 100}%)`;
-      Array.from(gDots).forEach((d, j) => d.classList.toggle('active', j === gIndex));
+    function goTo(i) {
+      index = (i + imgs.length) % imgs.length;
+      slides.style.transform = `translateX(-${index * 100}%)`;
+      Array.from(dots).forEach((d, j) => d.classList.toggle('active', j === index));
     }
 
-    document.getElementById('facialPrev').addEventListener('click', () => gGoTo(gIndex - 1));
-    document.getElementById('facialNext').addEventListener('click', () => gGoTo(gIndex + 1));
+    document.getElementById(prefix + 'Prev').addEventListener('click', () => goTo(index - 1));
+    document.getElementById(prefix + 'Next').addEventListener('click', () => goTo(index + 1));
 
-    // Swipe táctil
-    let gStartX = 0;
-    gallerySlides.addEventListener('touchstart', e => { gStartX = e.touches[0].clientX; }, { passive: true });
-    gallerySlides.addEventListener('touchend', e => {
-      const delta = e.changedTouches[0].clientX - gStartX;
-      if (Math.abs(delta) > 40) gGoTo(gIndex + (delta < 0 ? 1 : -1));
+    // swipe táctil en la tarjeta
+    let startX = 0;
+    slides.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+    slides.addEventListener('touchend', e => {
+      const delta = e.changedTouches[0].clientX - startX;
+      if (Math.abs(delta) > 40) goTo(index + (delta < 0 ? 1 : -1));
     }, { passive: true });
 
-    gGoTo(0);
+    goTo(0);
+
+    // clic en la foto -> abre el lightbox con las fotos de ESTA galería
+    const photos = Array.from(photoEls).map(im => ({ src: im.currentSrc || im.src, alt: im.alt }));
+    photoEls.forEach((im, i) => im.addEventListener('click', () => openLb(photos, i)));
   }
+
+  ['facial', 'acne'].forEach(initGallery);
 
   /* ---------- 6. Año dinámico ---------- */
   document.getElementById('year').textContent = new Date().getFullYear();
