@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
     photoEls.forEach((im, i) => im.addEventListener('click', () => openLb(photos, i)));
   }
 
-  ['facial', 'acne'].forEach(initGallery);
+  ['facial', 'acne', 'hilos', 'botox'].forEach(initGallery);
 
   /* ---------- 6. Año dinámico ---------- */
   document.getElementById('year').textContent = new Date().getFullYear();
