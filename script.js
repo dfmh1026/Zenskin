@@ -103,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const message = form.message.value.trim();
 
     if (!name || !phone) {
+      note.className = 'form__note is-error';
       note.textContent = 'Por favor completa tu nombre y WhatsApp.';
       return;
     }
@@ -113,7 +114,8 @@ document.addEventListener('DOMContentLoaded', () => {
       ` Mi número: ${phone}.`
     );
 
-    note.textContent = 'Abriendo WhatsApp…';
+    note.className = 'form__note is-ok';
+    note.textContent = '✓ ¡Listo! Abriendo WhatsApp para enviar tu solicitud…';
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, '_blank');
     form.reset();
   });

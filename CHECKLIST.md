@@ -38,8 +38,8 @@ Leyenda: `[x]` hecho · `[~]` parcial · `[ ]` pendiente
 - [x] `aria-label` en botones e íconos sin texto
 - [x] `:focus-visible` visible para navegación con teclado
 - [x] Respeta `prefers-reduced-motion`
-- [ ] Verificar contraste de color (texto sobre fondos)
-- [ ] Enlace "saltar al contenido" (skip link)
+- [x] Enlace "saltar al contenido" (aparece al pulsar Tab)
+- [x] Contraste de color verificado: 23 combinaciones, todas cumplen WCAG AA
 
 ## 6. Rendimiento
 - [x] `loading="lazy"` en imágenes
@@ -58,8 +58,9 @@ Leyenda: `[x]` hecho · `[~]` parcial · `[ ]` pendiente
 - [x] Imagen de compartir `og-image.jpg` (1200×630) con el logo
 - [x] Favicon 16/32 px + ícono para iOS + `theme-color`
 - [x] `<link rel="canonical">`
-- [ ] `sitemap.xml` y `robots.txt`
-- [ ] Datos estructurados de negocio local (schema.org LocalBusiness)
+- [x] `sitemap.xml` y `robots.txt`
+- [x] Datos estructurados de negocio local (schema.org BeautySalon con horario y servicios)
+- [ ] Añadir dirección exacta (calle y ciudad) para mejorar el posicionamiento local
 
 ## 8. Formularios e interacción
 - [x] Formulario de contacto que abre WhatsApp prellenado
@@ -69,7 +70,7 @@ Leyenda: `[x]` hecho · `[~]` parcial · `[ ]` pendiente
 - [x] Lightbox para ampliar fotos y videos (✕, flechas, Esc, swipe)
 - [x] Carrusel mixto foto + video (tratamiento postquirúrgico)
 - [x] Lista desplegable sincronizada con todos los servicios
-- [ ] Mensaje de confirmación más visible al enviar
+- [x] Mensaje de confirmación/error resaltado al enviar el formulario
 
 ## 9. Legal
 - [x] Página de Política de privacidad

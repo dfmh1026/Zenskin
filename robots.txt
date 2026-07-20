@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dfmh1026.github.io/Zenskin/sitemap.xml

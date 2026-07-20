@@ -12,6 +12,8 @@
   --oro: #C9A24B;
   --oro-claro: #E8CE8C;
   --oro-oscuro: #9C7A2E;
+  /* dorado más oscuro para texto pequeño sobre fondo claro (contraste AA 5.18:1) */
+  --oro-texto: #806224;
   --perla: #F7F4EC;
   --champan: #EFE6D2;
   --tinta: #23301F;
@@ -640,7 +642,7 @@ h2 .acento, h3 .acento {
   font-size: .78rem;
   font-weight: 500;
   text-transform: uppercase;
-  color: var(--oro-oscuro);
+  color: var(--oro-texto);
   letter-spacing: .18em;
 }
 .slider__controls {
@@ -655,7 +657,7 @@ h2 .acento, h3 .acento {
   border-radius: 50%;
   border: 1px solid var(--oro);
   background: none;
-  color: var(--oro-oscuro);
+  color: var(--oro-texto);
   font-size: 1.4rem;
   cursor: pointer;
   transition: background .2s ease, color .2s ease;
@@ -709,7 +711,30 @@ h2 .acento, h3 .acento {
 }
 .form input::placeholder, .form textarea::placeholder { color: rgba(247,244,236,.4); }
 .form button { margin-top: 1.2rem; }
-.form__note { font-size: .85rem; color: var(--oro-claro); min-height: 1.2em; }
+.form__note {
+  font-size: .88rem;
+  color: var(--oro-claro);
+  min-height: 1.2em;
+  text-align: center;
+  transition: background .25s ease, padding .25s ease;
+}
+/* resalta el mensaje cuando hay algo que decir */
+.form__note.is-error,
+.form__note.is-ok {
+  padding: .7rem .9rem;
+  border-radius: 8px;
+  font-weight: 500;
+}
+.form__note.is-error {
+  background: rgba(220, 90, 90, 0.15);
+  border: 1px solid rgba(220, 90, 90, 0.5);
+  color: #FFC9C9;
+}
+.form__note.is-ok {
+  background: rgba(201, 162, 75, 0.15);
+  border: 1px solid rgba(201, 162, 75, 0.5);
+  color: var(--oro-claro);
+}
 
 /* footer */
 .footer {
@@ -765,12 +790,12 @@ h2 .acento, h3 .acento {
 .legal h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); margin: .4rem 0 .3rem; }
 .legal h2 { font-size: 1.4rem; margin: 2rem 0 .6rem; color: var(--verde); }
 .legal p { color: var(--tinta); margin-bottom: .8rem; }
-.legal a { color: var(--oro-oscuro); text-decoration: underline; text-underline-offset: 3px; }
+.legal a { color: var(--oro-texto); text-decoration: underline; text-underline-offset: 3px; }
 .legal__updated {
   font-size: .82rem;
   letter-spacing: .08em;
   text-transform: uppercase;
-  color: var(--oro-oscuro);
+  color: var(--oro-texto);
   margin-bottom: 1.6rem;
 }
 .legal__back { margin-top: 2.5rem; }
@@ -843,6 +868,21 @@ h2 .acento, h3 .acento {
 
 /* accesibilidad */
 :focus-visible { outline: 2px solid var(--oro); outline-offset: 3px; }
+
+/* enlace para saltar al contenido: solo visible al navegar con teclado (Tab) */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: -9999px;
+  z-index: 200;
+  background: var(--oro);
+  color: var(--verde-noche);
+  padding: .8rem 1.4rem;
+  border-radius: 0 0 8px 0;
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip-link:focus { left: 0; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   html { scroll-behavior: auto; }
