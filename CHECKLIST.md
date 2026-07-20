@@ -10,7 +10,7 @@ Leyenda: `[x]` hecho · `[~]` parcial · `[ ]` pendiente
 - [x] Definir secciones (inicio, quiénes somos, servicios, testimonios, contacto)
 - [x] Redactar textos reales de cada sección
 - [x] Definir paleta de marca (verde + oro) y tipografías
-- [ ] Conseguir fotos reales de TODOS los servicios (solo hay de limpieza facial)
+- [~] Fotos reales de los servicios (7 de 9 listos; faltan **Rejuvenecimiento facial** y **Tratamientos corporales**)
 
 ## 2. Estructura y HTML semántico
 - [x] `<!DOCTYPE html>` y `<html lang="es">`
@@ -46,14 +46,18 @@ Leyenda: `[x]` hecho · `[~]` parcial · `[ ]` pendiente
 - [x] Optimizar el logo (1.3 MB → 76 KB, −94%)
 - [x] Convertir imágenes a formato moderno (WebP) con `<picture>` + respaldo JPEG
 - [x] Script reutilizable `optimizar-imagenes.mjs` para futuras imágenes
-- [x] Definir `width`/`height` en las fotos para evitar saltos de layout
+- [x] Evitar saltos de layout (vía `aspect-ratio: 4/3` en CSS)
+- [x] Todas las fotos estandarizadas a 1200×900 y convertidas de PNG pesado a JPEG
 - [ ] Revisar puntuación en Lighthouse / PageSpeed
+- [ ] Eliminar `videohero.mp4` (3.6 MB, ya no se usa en el hero)
 
 ## 7. SEO
 - [x] `<title>` único y descriptivo
 - [x] `<meta name="description">`
-- [ ] Etiquetas Open Graph (para compartir en redes/WhatsApp)
-- [ ] Favicon (ícono de la pestaña)
+- [x] Etiquetas Open Graph + Twitter (vista previa al compartir por WhatsApp/redes)
+- [x] Imagen de compartir `og-image.jpg` (1200×630) con el logo
+- [x] Favicon 16/32 px + ícono para iOS + `theme-color`
+- [x] `<link rel="canonical">`
 - [ ] `sitemap.xml` y `robots.txt`
 - [ ] Datos estructurados de negocio local (schema.org LocalBusiness)
 
@@ -61,7 +65,10 @@ Leyenda: `[x]` hecho · `[~]` parcial · `[ ]` pendiente
 - [x] Formulario de contacto que abre WhatsApp prellenado
 - [x] Validación básica (nombre y teléfono obligatorios)
 - [x] Slider de testimonios (autoplay + controles + swipe)
-- [x] Carrusel de fotos en el servicio (flechas + dots + swipe)
+- [x] Carruseles de fotos en los servicios (flechas + dots + swipe)
+- [x] Lightbox para ampliar fotos y videos (✕, flechas, Esc, swipe)
+- [x] Carrusel mixto foto + video (tratamiento postquirúrgico)
+- [x] Lista desplegable sincronizada con todos los servicios
 - [ ] Mensaje de confirmación más visible al enviar
 
 ## 9. Legal
@@ -72,9 +79,9 @@ Leyenda: `[x]` hecho · `[~]` parcial · `[ ]` pendiente
 
 ## 10. Control de versiones (Git)
 - [x] Repositorio en GitHub
-- [~] Commits con mensajes claros
-- [ ] ⚠️ Subir cambios pendientes (hay archivos sin commitear)
-- [ ] Añadir un `.gitignore`
+- [x] Commits con mensajes claros
+- [x] Cambios subidos (árbol de trabajo limpio)
+- [x] `.gitignore` (excluye `node_modules/`)
 
 ## 11. Despliegue y pruebas
 - [x] GitHub Pages configurado
@@ -89,4 +96,4 @@ Leyenda: `[x]` hecho · `[~]` parcial · `[ ]` pendiente
 
 ---
 
-**Actualizado:** 17 de julio de 2026
+**Actualizado:** 20 de julio de 2026
