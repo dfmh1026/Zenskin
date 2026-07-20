@@ -220,6 +220,8 @@ h2 .acento, h3 .acento {
 
 /* ---------- hero ---------- */
 .hero {
+  position: relative;
+  overflow: hidden;
   min-height: 88vh;
   display: flex;
   flex-direction: column;
@@ -227,10 +229,34 @@ h2 .acento, h3 .acento {
   justify-content: center;
   text-align: center;
   padding: 4rem 1.5rem;
+  /* se ve mientras el video carga o si no está disponible */
   background:
     radial-gradient(ellipse at 50% -20%, rgba(201, 162, 75, 0.12), transparent 55%),
     linear-gradient(180deg, var(--verde-noche), var(--verde) 70%);
 }
+/* imagen de fondo */
+.hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* capa que oscurece la imagen para que el texto se lea bien */
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse at 50% -20%, rgba(201, 162, 75, 0.18), transparent 55%),
+    linear-gradient(180deg, rgba(7, 35, 26, 0.72), rgba(14, 59, 38, 0.82) 70%);
+}
+/* el contenido del hero va por encima de la imagen y la capa */
+.hero > :not(.hero__media):not(.hero__overlay) { position: relative; z-index: 2; }
 .hero__ornament { width: min(220px, 55vw); margin-bottom: 1rem; opacity: 0; animation: fadeUp 1s ease .1s forwards; }
 .hero__eyebrow {
   font-size: .72rem;
@@ -251,6 +277,14 @@ h2 .acento, h3 .acento {
   text-shadow: 0 0 60px rgba(201, 162, 75, 0.25);
   opacity: 0; animation: fadeUp 1s ease .45s forwards;
 }
+/* el título es un enlace que recarga la página */
+.hero__home {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity .25s ease;
+}
+.hero__home:hover { opacity: .85; }
 .hero__rule {
   width: min(320px, 60vw);
   height: 1px;
@@ -450,16 +484,16 @@ h2 .acento, h3 .acento {
 }
 .gallery__dots button.active { background: var(--oro-claro); transform: scale(1.3); }
 
-/* tarjeta con video (mismo marco que las de fotos) */
-.card__video {
+/* slide de video dentro de un carrusel (mismo marco 4:3 que las fotos) */
+.card__slides > .card__slide--video {
+  min-width: 100%;
   position: relative;
-  margin: 0 -1.8rem 1.6rem;
-  overflow: hidden;
-  background: var(--verde-noche);
   aspect-ratio: 4 / 3;        /* el MARCO define la proporción, no el video */
+  background: var(--verde-noche);
+  overflow: hidden;
 }
 /* el video llena el marco y se recorta, funcione en el navegador que funcione */
-.card__video video {
+.card__slide--video video {
   position: absolute;
   inset: 0;
   width: 100%;

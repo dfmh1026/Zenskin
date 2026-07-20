@@ -16,7 +16,7 @@
   <!-- ======= NAVBAR ======= -->
   <header class="nav" id="inicio">
     <div class="nav__inner">
-      <a href="#inicio" class="nav__brand">
+      <a href="index.html" class="nav__brand" aria-label="Recargar inicio">
         <svg class="nav__lotus" viewBox="0 0 200 160" aria-hidden="true">
           <use href="#lotus-icon"></use>
         </svg>
@@ -37,6 +37,11 @@
   <main>
     <!-- ======= HERO ======= -->
     <section class="hero">
+      <picture class="hero__media" aria-hidden="true">
+        <source srcset="assets/tixelhero.webp" type="image/webp" />
+        <img src="assets/tixelhero.jpeg" alt="" />
+      </picture>
+      <div class="hero__overlay" aria-hidden="true"></div>
       <div class="hero__ornament" aria-hidden="true">
         <svg viewBox="0 0 200 160">
           <g id="lotus-icon" fill="none" stroke="url(#goldGrad)" stroke-width="2.2" stroke-linecap="round">
@@ -62,7 +67,7 @@
         </svg>
       </div>
       <p class="hero__eyebrow">Centro de estética</p>
-      <h1 class="hero__title">Z<span class="e-styled">Ɛ</span>N <span class="gold-text">SKIN</span></h1>
+      <h1 class="hero__title"><a href="index.html" class="hero__home" aria-label="Recargar inicio">Z<span class="e-styled">Ɛ</span>N <span class="gold-text">SKIN</span></a></h1>
       <div class="hero__rule" aria-hidden="true"></div>
       <p class="hero__sub">STUDIO</p>
       <p class="hero__lead">Cuidado facial y corporal con protocolos personalizados. Tu piel, en equilibrio.</p>
@@ -181,13 +186,62 @@
             <p>Suaviza arrugas de expresión y previene nuevas líneas para un rostro descansado y natural.</p>
           </article>
           <article class="card card--media">
-            <div class="card__video">
-              <video src="assets/postquirurgico.mp4" autoplay muted loop playsinline preload="metadata"
-                     aria-label="Video de tratamiento postquirúrgico en Zen Skin Studio"></video>
-              <button class="card__expand" aria-label="Ver video ampliado">⤢</button>
+            <div class="card__gallery" id="postqGallery">
+              <div class="card__slides" id="postqSlides">
+                <picture>
+                  <source srcset="assets/postquirurgico_1.webp" type="image/webp" />
+                  <img src="assets/postquirurgico_1.jpeg" alt="Tratamiento postquirúrgico en Zen Skin Studio" loading="lazy" />
+                </picture>
+                <div class="card__slide--video">
+                  <video src="assets/postquirurgico.mp4" autoplay muted loop playsinline preload="metadata"
+                         aria-label="Video de tratamiento postquirúrgico en Zen Skin Studio"></video>
+                  <button class="card__expand" aria-label="Ver video ampliado">⤢</button>
+                </div>
+              </div>
+              <button class="gallery__nav gallery__nav--prev" id="postqPrev" aria-label="Anterior">‹</button>
+              <button class="gallery__nav gallery__nav--next" id="postqNext" aria-label="Siguiente">›</button>
+              <div class="gallery__dots" id="postqDots"></div>
             </div>
             <h3>Tratamiento postquirúrgico</h3>
             <p>Acompañamiento y cuidados especializados para una recuperación óptima tras tu procedimiento.</p>
+          </article>
+          <article class="card card--media">
+            <div class="card__gallery" id="liftingGallery">
+              <div class="card__slides" id="liftingSlides">
+                <picture>
+                  <source srcset="assets/liftingfacial_1.webp" type="image/webp" />
+                  <img src="assets/liftingfacial_1.jpeg" alt="Lifting facial en Zen Skin Studio" loading="lazy" />
+                </picture>
+                <picture>
+                  <source srcset="assets/liftingfacial_2.webp" type="image/webp" />
+                  <img src="assets/liftingfacial_2.jpeg" alt="Sesión de lifting facial en Zen Skin Studio" loading="lazy" />
+                </picture>
+              </div>
+              <button class="gallery__nav gallery__nav--prev" id="liftingPrev" aria-label="Foto anterior">‹</button>
+              <button class="gallery__nav gallery__nav--next" id="liftingNext" aria-label="Foto siguiente">›</button>
+              <div class="gallery__dots" id="liftingDots"></div>
+            </div>
+            <h3>Lifting Facial</h3>
+            <p>Reafirma y eleva los tejidos del rostro para un aspecto más firme, joven y definido.</p>
+          </article>
+          <article class="card card--media">
+            <div class="card__gallery" id="cuelloGallery">
+              <div class="card__slides" id="cuelloSlides">
+                <picture>
+                  <source srcset="assets/liftingcuello1.webp" type="image/webp" />
+                  <img src="assets/liftingcuello1.jpeg" alt="Lifting de cuello en Zen Skin Studio" loading="lazy" />
+                </picture>
+                <picture>
+                  <source srcset="assets/liftingcuello2.webp" type="image/webp" />
+                  <img src="assets/liftingcuello2.jpeg" alt="Sesión de lifting de cuello en Zen Skin Studio" loading="lazy" />
+                </picture>
+              </div>
+              <button class="gallery__nav gallery__nav--prev" id="cuelloPrev" aria-label="Foto anterior">‹</button>
+              <button class="gallery__nav gallery__nav--next" id="cuelloNext" aria-label="Foto siguiente">›</button>
+              <div class="gallery__dots" id="cuelloDots"></div>
+            </div>
+            <h3>Lifting de cuello</h3>
+            <p>Reafirma la piel del cuello y redefine el contorno para un perfil más terso y rejuvenecido.</p>
           </article>
           <article class="card">
             <h3>Rejuvenecimiento facial</h3>
@@ -254,6 +308,8 @@
             <option>Hilos tensores</option>
             <option>Inyección de Botox</option>
             <option>Tratamiento postquirúrgico</option>
+            <option>Lifting Facial</option>
+            <option>Lifting de cuello</option>
             <option>Rejuvenecimiento facial</option>
             <option>Tratamientos corporales</option>
             <option>Valoración inicial</option>

@@ -225,18 +225,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // clic en la foto -> abre el lightbox con las fotos de ESTA galería
     const photos = Array.from(photoEls).map(im => ({ src: im.currentSrc || im.src, alt: im.alt }));
     photoEls.forEach((im, i) => im.addEventListener('click', () => openLb(photos, i)));
+
+    // clic en un slide de video -> abre el lightbox del video (con sonido)
+    slides.querySelectorAll('.card__slide--video').forEach(sv => {
+      const vid = sv.querySelector('video');
+      const open = () => openLbVideo(vid.currentSrc || vid.getAttribute('src'));
+      vid.addEventListener('click', open);
+      const btn = sv.querySelector('.card__expand');
+      if (btn) btn.addEventListener('click', open);
+    });
   }
 
-  ['facial', 'acne', 'hilos', 'botox'].forEach(initGallery);
-
-  // -- Tarjetas con video: clic para ampliar (con sonido) --
-  document.querySelectorAll('.card__video').forEach(cv => {
-    const vid = cv.querySelector('video');
-    const open = () => openLbVideo(vid.currentSrc || vid.getAttribute('src'));
-    vid.addEventListener('click', open);
-    const btn = cv.querySelector('.card__expand');
-    if (btn) btn.addEventListener('click', open);
-  });
+  ['facial', 'acne', 'hilos', 'botox', 'postq', 'lifting', 'cuello'].forEach(initGallery);
 
   /* ---------- 6. Año dinámico ---------- */
   document.getElementById('year').textContent = new Date().getFullYear();
