@@ -47,22 +47,26 @@ body {
 img { max-width: 100%; display: block; }
 a { color: inherit; }
 
+::selection { background: var(--oro); color: var(--verde-noche); }
+
 h1, h2, h3 {
   font-family: var(--font-display);
   font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: -.01em;
+  line-height: 1.08;
+  letter-spacing: -.015em;
+  text-wrap: balance;      /* evita líneas viudas en los títulos */
 }
-h2 { font-size: clamp(2.1rem, 4.5vw, 3.4rem); margin: .5rem 0 1.1rem; }
-h3 { font-size: 1.45rem; margin-bottom: .6rem; }
+/* la serif luce más lujosa grande y ligera */
+h2 { font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 400; margin: .6rem 0 1.2rem; }
+h3 { font-size: 1.6rem; margin-bottom: .6rem; }
 
-p { font-size: 1.02rem; }
+p { font-size: 1.05rem; text-wrap: pretty; }
 strong { font-weight: 500; }
 
 /* palabra en cursiva dentro de un título: rompe la rigidez de la serif */
 h2 .acento, h3 .acento {
   font-style: italic;
-  font-weight: 400;
+  font-weight: 300;
   color: var(--oro-oscuro);
 }
 .on-dark .acento { color: var(--oro-claro); }
@@ -304,11 +308,12 @@ h2 .acento, h3 .acento {
   opacity: 0; animation: fadeUp 1s ease .7s forwards;
 }
 .hero__lead {
-  max-width: 500px;
+  max-width: 540px;
   margin-top: 1.6rem;
-  font-size: 1.08rem;
+  font-size: clamp(1.08rem, 1.6vw, 1.22rem);
   font-weight: 300;
-  color: rgba(247, 244, 236, 0.72);
+  line-height: 1.65;
+  color: rgba(247, 244, 236, 0.78);
   opacity: 0; animation: fadeUp 1s ease .85s forwards;
 }
 .hero__actions {
