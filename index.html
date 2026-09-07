@@ -107,10 +107,18 @@
   <main id="contenido">
     <!-- ======= HERO ======= -->
     <section class="hero">
-      <picture class="hero__media" aria-hidden="true">
-        <source srcset="assets/tixelhero.webp" type="image/webp" />
-        <img src="assets/tixelhero.jpeg" alt="" />
-      </picture>
+      <video
+        class="hero__media"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+        poster="assets/tixelhero.jpeg"
+        aria-hidden="true"
+      >
+        <source src="assets/video-hero.mp4" type="video/mp4" />
+      </video>
       <div class="hero__overlay" aria-hidden="true"></div>
       <div class="hero__ornament" aria-hidden="true">
         <svg viewBox="0 0 200 160">
