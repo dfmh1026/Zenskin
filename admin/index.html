@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Pacientes — Panel Zen Skin Studio</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <nav class="admin-nav">
+    <a href="./index.html" class="admin-nav__brand">Zen Skin Studio · Admin</a>
+    <div class="admin-nav__right">
+      <span id="staffName"></span>
+      <button class="btn btn--ghost btn--sm" id="logoutBtn">Salir</button>
+    </div>
+  </nav>
+
+  <main class="admin-main">
+    <h1>Pacientes</h1>
+    <p class="muted">Busca por cédula o nombre, o registra un paciente nuevo.</p>
+
+    <div class="search-bar" style="margin-top:1.2rem">
+      <input type="search" id="searchInput" placeholder="Buscar por cédula o nombre…" />
+      <button class="btn" id="searchBtn">Buscar</button>
+      <button class="btn btn--oro" id="newPatientBtn">+ Nuevo paciente</button>
+    </div>
+
+    <div id="listMsg"></div>
+
+    <div class="card" id="resultsCard">
+      <table class="list" id="resultsTable">
+        <thead>
+          <tr>
+            <th>Cédula</th>
+            <th>Nombre</th>
+            <th>Teléfono</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="resultsBody"></tbody>
+      </table>
+      <p class="muted" id="emptyState">Escribe una cédula o nombre y presiona Buscar.</p>
+    </div>
+
+    <div class="card hidden" id="newPatientCard">
+      <h2 style="margin-top:0">Nuevo paciente</h2>
+      <div id="newPatientMsg"></div>
+      <form id="newPatientForm">
+        <div class="grid-2">
+          <div class="field">
+            <label for="np_cedula">Cédula / documento *</label>
+            <input id="np_cedula" required />
+          </div>
+          <div class="field">
+            <label for="np_nombre">Nombre completo *</label>
+            <input id="np_nombre" required />
+          </div>
+          <div class="field">
+            <label for="np_nacimiento">Fecha de nacimiento</label>
+            <input id="np_nacimiento" type="date" />
+          </div>
+          <div class="field">
+            <label for="np_genero">Género</label>
+            <input id="np_genero" />
+          </div>
+          <div class="field">
+            <label for="np_telefono">Teléfono</label>
+            <input id="np_telefono" />
+          </div>
+          <div class="field">
+            <label for="np_email">Correo</label>
+            <input id="np_email" type="email" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="np_direccion">Dirección</label>
+          <input id="np_direccion" />
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="np_emerg_nombre">Contacto de emergencia — nombre</label>
+            <input id="np_emerg_nombre" />
+          </div>
+          <div class="field">
+            <label for="np_emerg_tel">Contacto de emergencia — teléfono</label>
+            <input id="np_emerg_tel" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="np_alergias">Alergias</label>
+          <textarea id="np_alergias"></textarea>
+        </div>
+        <div class="field">
+          <label for="np_antecedentes">Antecedentes médicos</label>
+          <textarea id="np_antecedentes"></textarea>
+        </div>
+        <div class="field">
+          <label for="np_medicamentos">Medicamentos actuales</label>
+          <textarea id="np_medicamentos"></textarea>
+        </div>
+        <div class="field">
+          <label for="np_notas">Notas generales</label>
+          <textarea id="np_notas"></textarea>
+        </div>
+        <div style="display:flex; gap:.6rem">
+          <button class="btn" type="submit">Guardar y abrir ficha</button>
+          <button class="btn btn--ghost" type="button" id="cancelNewPatient">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script type="module">
+    import { supabase } from "./js/supabase-client.js";
+    import { requireAuth, wireLogout } from "./js/auth-guard.js";
+
+    const auth = await requireAuth();
+    if (auth) {
+      document.getElementById("staffName").textContent = auth.staff.nombre;
+      wireLogout(document.getElementById("logoutBtn"));
+    }
+
+    const searchInput = document.getElementById("searchInput");
+    const searchBtn = document.getElementById("searchBtn");
+    const resultsBody = document.getElementById("resultsBody");
+    const emptyState = document.getElementById("emptyState");
+    const listMsg = document.getElementById("listMsg");
+
+    async function runSearch() {
+      const q = searchInput.value.trim();
+      listMsg.innerHTML = "";
+      resultsBody.innerHTML = "";
+
+      let query = supabase
+        .from("pacientes")
+        .select("id, cedula, nombre_completo, telefono")
+        .order("nombre_completo")
+        .limit(50);
+
+      if (q) {
+        query = query.or(`cedula.ilike.%${q}%,nombre_completo.ilike.%${q}%`);
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        listMsg.innerHTML = `<div class="msg msg--error">Error al buscar: ${error.message}</div>`;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        emptyState.textContent = "Sin resultados.";
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      emptyState.classList.add("hidden");
+      for (const p of data) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${p.cedula}</td>
+          <td>${p.nombre_completo}</td>
+          <td>${p.telefono ?? "—"}</td>
+          <td class="text-right"><a class="btn btn--sm" href="./paciente.html?id=${p.id}">Ver ficha</a></td>
+        `;
+        resultsBody.appendChild(tr);
+      }
+    }
+
+    searchBtn.addEventListener("click", runSearch);
+    searchInput.addEventListener("keydown", (e) => { if (e.key === "Enter") runSearch(); });
+    runSearch();
+
+    // ---- Alta de paciente ----
+    const newPatientCard = document.getElementById("newPatientCard");
+    const newPatientForm = document.getElementById("newPatientForm");
+    const newPatientMsg = document.getElementById("newPatientMsg");
+
+    document.getElementById("newPatientBtn").addEventListener("click", () => {
+      newPatientCard.classList.remove("hidden");
+      newPatientCard.scrollIntoView({ behavior: "smooth" });
+    });
+    document.getElementById("cancelNewPatient").addEventListener("click", () => {
+      newPatientCard.classList.add("hidden");
+      newPatientForm.reset();
+    });
+
+    newPatientForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      newPatientMsg.innerHTML = "";
+
+      const payload = {
+        cedula: document.getElementById("np_cedula").value.trim(),
+        nombre_completo: document.getElementById("np_nombre").value.trim(),
+        fecha_nacimiento: document.getElementById("np_nacimiento").value || null,
+        genero: document.getElementById("np_genero").value.trim() || null,
+        telefono: document.getElementById("np_telefono").value.trim() || null,
+        email: document.getElementById("np_email").value.trim() || null,
+        direccion: document.getElementById("np_direccion").value.trim() || null,
+        contacto_emergencia_nombre: document.getElementById("np_emerg_nombre").value.trim() || null,
+        contacto_emergencia_telefono: document.getElementById("np_emerg_tel").value.trim() || null,
+        alergias: document.getElementById("np_alergias").value.trim() || null,
+        antecedentes_medicos: document.getElementById("np_antecedentes").value.trim() || null,
+        medicamentos_actuales: document.getElementById("np_medicamentos").value.trim() || null,
+        notas_generales: document.getElementById("np_notas").value.trim() || null,
+        created_by: auth.staff.id,
+      };
+
+      const { data, error } = await supabase.from("pacientes").insert(payload).select("id").single();
+
+      if (error) {
+        const msg = error.code === "23505"
+          ? "Ya existe un paciente con esa cédula."
+          : `No se pudo guardar: ${error.message}`;
+        newPatientMsg.innerHTML = `<div class="msg msg--error">${msg}</div>`;
+        return;
+      }
+
+      window.location.href = `./paciente.html?id=${data.id}`;
+    });
+  </script>
+</body>
+</html>

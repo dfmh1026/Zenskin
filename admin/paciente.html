@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Ficha de paciente — Panel Zen Skin Studio</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <nav class="admin-nav">
+    <a href="./index.html" class="admin-nav__brand">Zen Skin Studio · Admin</a>
+    <div class="admin-nav__right">
+      <span id="staffName"></span>
+      <button class="btn btn--ghost btn--sm" id="logoutBtn">Salir</button>
+    </div>
+  </nav>
+
+  <main class="admin-main">
+    <a href="./index.html" class="muted">&larr; Volver a pacientes</a>
+    <div id="pageMsg"></div>
+
+    <div id="patientArea" class="hidden">
+      <h1 id="patientName"></h1>
+      <p class="muted" id="patientSub"></p>
+
+      <div class="totales card" id="totalesCard">
+        <div class="item">
+          <div class="num" id="totFacturado">$0</div>
+          <div class="lbl">Facturado</div>
+        </div>
+        <div class="item">
+          <div class="num" id="totAbonado">$0</div>
+          <div class="lbl">Abonado</div>
+        </div>
+        <div class="item">
+          <div class="num" id="totSaldo">$0</div>
+          <div class="lbl">Saldo pendiente</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center">
+          <h3 style="margin:0">Datos del paciente</h3>
+          <button class="btn btn--ghost btn--sm" id="toggleEditPatient">Editar</button>
+        </div>
+        <div id="patientMsg"></div>
+        <form id="patientForm">
+          <fieldset id="patientFieldset" disabled style="border:none; padding:0; margin-top:.8rem">
+            <div class="grid-2">
+              <div class="field"><label>Cédula / documento</label><input id="p_cedula" required /></div>
+              <div class="field"><label>Nombre completo</label><input id="p_nombre" required /></div>
+              <div class="field"><label>Fecha de nacimiento</label><input id="p_nacimiento" type="date" /></div>
+              <div class="field"><label>Género</label><input id="p_genero" /></div>
+              <div class="field"><label>Teléfono</label><input id="p_telefono" /></div>
+              <div class="field"><label>Correo</label><input id="p_email" type="email" /></div>
+            </div>
+            <div class="field"><label>Dirección</label><input id="p_direccion" /></div>
+            <div class="grid-2">
+              <div class="field"><label>Contacto de emergencia — nombre</label><input id="p_emerg_nombre" /></div>
+              <div class="field"><label>Contacto de emergencia — teléfono</label><input id="p_emerg_tel" /></div>
+            </div>
+            <div class="field"><label>Alergias</label><textarea id="p_alergias"></textarea></div>
+            <div class="field"><label>Antecedentes médicos</label><textarea id="p_antecedentes"></textarea></div>
+            <div class="field"><label>Medicamentos actuales</label><textarea id="p_medicamentos"></textarea></div>
+            <div class="field"><label>Notas generales</label><textarea id="p_notas"></textarea></div>
+            <button class="btn" type="submit">Guardar cambios</button>
+          </fieldset>
+        </form>
+      </div>
+
+      <h2>Historia clínica</h2>
+
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center">
+          <h3 style="margin:0">Registrar nueva visita / procedimiento</h3>
+          <button class="btn btn--oro btn--sm" id="toggleNewEntry">+ Nueva entrada</button>
+        </div>
+        <div id="entryMsg"></div>
+        <form id="entryForm" class="hidden" style="margin-top:.8rem">
+          <div class="grid-2">
+            <div class="field"><label>Fecha *</label><input id="e_fecha" type="date" required /></div>
+            <div class="field">
+              <label>Tipo</label>
+              <select id="e_tipo">
+                <option value="consulta">Consulta</option>
+                <option value="procedimiento">Procedimiento</option>
+                <option value="seguimiento">Seguimiento</option>
+              </select>
+            </div>
+          </div>
+          <div class="field"><label>Motivo</label><input id="e_motivo" /></div>
+          <div class="field"><label>Diagnóstico</label><textarea id="e_diagnostico"></textarea></div>
+          <div class="field"><label>Tratamiento realizado</label><textarea id="e_tratamiento"></textarea></div>
+          <div class="field"><label>Productos usados</label><input id="e_productos" /></div>
+          <div class="field"><label>Observaciones</label><textarea id="e_observaciones"></textarea></div>
+          <div class="grid-2">
+            <div class="field"><label>Próxima cita</label><input id="e_proxima" type="date" /></div>
+            <div class="field"><label>Profesional</label><input id="e_profesional" /></div>
+          </div>
+
+          <h3>Cobro de esta visita (opcional)</h3>
+          <div class="grid-2">
+            <div class="field"><label>Servicio</label><input id="e_servicio" /></div>
+            <div class="field"><label>Método de pago</label><input id="e_metodo" /></div>
+            <div class="field"><label>Precio</label><input id="e_precio" type="number" min="0" step="0.01" /></div>
+            <div class="field"><label>Abono</label><input id="e_abono" type="number" min="0" step="0.01" /></div>
+          </div>
+
+          <div style="display:flex; gap:.6rem">
+            <button class="btn" type="submit">Guardar entrada</button>
+            <button class="btn btn--ghost" type="button" id="cancelNewEntry">Cancelar</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="entriesList"></div>
+    </div>
+  </main>
+
+  <script type="module" src="./js/paciente.js"></script>
+</body>
+</html>

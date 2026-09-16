@@ -1,0 +1,288 @@
+/* ============================================================
+   ZEN SKIN STUDIO — panel admin
+   Reutiliza la paleta de marca definida en /styles.css
+   ============================================================ */
+:root {
+  --verde: #0E3B26;
+  --verde-noche: #07231A;
+  --oro: #C9A24B;
+  --oro-claro: #E8CE8C;
+  --oro-texto: #806224;
+  --perla: #F7F4EC;
+  --champan: #EFE6D2;
+  --tinta: #23301F;
+  --rojo: #B3413B;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+  --radio: 10px;
+  --sombra: 0 8px 28px rgba(7, 35, 26, 0.12);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--tinta);
+  background: var(--perla);
+  line-height: 1.5;
+}
+
+a { color: inherit; }
+
+.admin-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: var(--verde-noche);
+  color: var(--champan);
+}
+
+.admin-nav__brand {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--oro-claro);
+  text-decoration: none;
+}
+
+.admin-nav__right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: .9rem;
+}
+
+main.admin-main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: var(--verde-noche);
+}
+
+h1 { font-size: 2rem; margin-bottom: .25rem; }
+h2 { font-size: 1.4rem; margin: 1.5rem 0 .75rem; }
+h3 { font-size: 1.1rem; margin-bottom: .5rem; }
+
+.card {
+  background: #fff;
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  margin-bottom: .9rem;
+}
+
+.field label {
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--verde-noche);
+}
+
+.field input,
+.field select,
+.field textarea {
+  font-family: var(--font-body);
+  font-size: .95rem;
+  padding: .55rem .7rem;
+  border: 1px solid #d9d2c2;
+  border-radius: 8px;
+  background: var(--perla);
+  color: var(--tinta);
+}
+
+.field textarea { resize: vertical; min-height: 4.5em; }
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: 2px solid var(--oro);
+  outline-offset: 1px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1rem;
+}
+
+@media (max-width: 640px) {
+  .grid-2 { grid-template-columns: 1fr; }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: .9rem;
+  padding: .6rem 1.1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: var(--verde);
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn:hover { background: var(--verde-noche); }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+
+.btn--oro { background: var(--oro-texto); }
+.btn--oro:hover { background: #6b5220; }
+
+.btn--ghost {
+  background: transparent;
+  color: var(--verde-noche);
+  border: 1px solid var(--verde-noche);
+}
+.btn--ghost:hover { background: var(--champan); }
+
+.btn--danger { background: var(--rojo); }
+.btn--danger:hover { background: #8f322d; }
+
+.btn--sm { padding: .35rem .7rem; font-size: .8rem; }
+
+.search-bar {
+  display: flex;
+  gap: .6rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.search-bar input { flex: 1; min-width: 220px; }
+
+table.list {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .9rem;
+}
+
+table.list th,
+table.list td {
+  text-align: left;
+  padding: .6rem .5rem;
+  border-bottom: 1px solid #eee5d3;
+}
+
+table.list th { color: var(--oro-texto); font-weight: 700; font-size: .78rem; text-transform: uppercase; letter-spacing: .03em; }
+
+table.list tr:hover td { background: var(--champan); }
+
+.badge {
+  display: inline-block;
+  font-size: .75rem;
+  font-weight: 600;
+  padding: .15rem .55rem;
+  border-radius: 999px;
+}
+
+.badge--pagado { background: #dcefdf; color: #1b6b34; }
+.badge--parcial { background: #fbe9c9; color: #8a5b0a; }
+.badge--pendiente { background: #f6d9d6; color: var(--rojo); }
+
+.entry {
+  border-left: 3px solid var(--oro);
+  padding: .8rem 1rem;
+  margin-bottom: 1rem;
+  background: var(--champan);
+  border-radius: 0 8px 8px 0;
+}
+
+.entry__meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: .8rem;
+  color: var(--oro-texto);
+  margin-bottom: .4rem;
+}
+
+.entry__row { margin-bottom: .35rem; font-size: .92rem; }
+.entry__row strong { color: var(--verde-noche); }
+
+.photo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .6rem;
+}
+
+.photo-grid img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #d9d2c2;
+}
+
+.photo-grid figure { margin: 0; text-align: center; }
+.photo-grid figcaption { font-size: .68rem; color: var(--oro-texto); }
+
+.msg {
+  padding: .6rem .8rem;
+  border-radius: 8px;
+  font-size: .88rem;
+  margin-bottom: 1rem;
+}
+
+.msg--error { background: #f6d9d6; color: var(--rojo); }
+.msg--ok { background: #dcefdf; color: #1b6b34; }
+
+.totales {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.totales .item { text-align: left; }
+.totales .item .num { font-family: var(--font-display); font-size: 1.6rem; color: var(--verde-noche); }
+.totales .item .lbl { font-size: .78rem; color: var(--oro-texto); text-transform: uppercase; letter-spacing: .03em; }
+
+.login-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--verde-noche);
+  padding: 1rem;
+}
+
+.login-card {
+  background: #fff;
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 2rem;
+  width: 100%;
+  max-width: 380px;
+}
+
+.login-card h1 {
+  font-size: 1.6rem;
+  text-align: center;
+  margin-bottom: .3rem;
+}
+
+.login-card .sub {
+  text-align: center;
+  font-size: .85rem;
+  color: var(--oro-texto);
+  margin-bottom: 1.4rem;
+}
+
+.hidden { display: none !important; }
+.muted { color: #7a7566; font-size: .85rem; }
+.text-right { text-align: right; }

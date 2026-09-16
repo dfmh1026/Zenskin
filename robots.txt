@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
 
 Sitemap: https://dfmh1026.github.io/Zenskin/sitemap.xml
