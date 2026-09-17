@@ -242,4 +242,71 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- 6. Año dinámico ---------- */
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ---------- 7. Navbar dinámico + barra de progreso ---------- */
+  const navHeader = document.querySelector('.nav');
+  const scrollProgress = document.getElementById('scrollProgress');
+
+  function onScrollEffects() {
+    const st = window.scrollY;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    if (scrollProgress) scrollProgress.style.width = (max > 0 ? (st / max) * 100 : 0) + '%';
+    navHeader.classList.toggle('nav--scrolled', st > 40);
+  }
+  document.addEventListener('scroll', onScrollEffects, { passive: true });
+  onScrollEffects();
+
+  /* ---------- 8. Botones magnéticos (se acercan levemente al cursor) ---------- */
+  document.querySelectorAll('.magnetic').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const r = btn.getBoundingClientRect();
+      const x = e.clientX - r.left - r.width / 2;
+      const y = e.clientY - r.top - r.height / 2;
+      btn.style.transform = `translate(${x * 0.18}px, ${y * 0.35 - 3}px)`;
+    });
+    btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+  });
+
+  /* ---------- 9. Brillo + inclinación 3D en las tarjetas de servicio ---------- */
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      card.style.setProperty('--mx', `${x}px`);
+      card.style.setProperty('--my', `${y}px`);
+      const rx = ((y / r.height) - 0.5) * -4;
+      const ry = ((x / r.width) - 0.5) * 4;
+      card.style.transform = `translateY(-8px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+    });
+    card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+  });
+
+  /* ---------- 10. Contador animado en las estadísticas de "Quiénes somos" ---------- */
+  const counters = document.querySelectorAll('[data-count]');
+  const counterObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      counterObserver.unobserve(entry.target);
+
+      const el = entry.target;
+      const target = parseFloat(el.dataset.count);
+      const decimals = parseInt(el.dataset.decimals || '0', 10);
+      const prefix = el.dataset.prefix || '';
+      const suffix = el.dataset.suffix || '';
+      const start = performance.now();
+      const duration = 1400;
+
+      function step(now) {
+        const p = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - p, 3);
+        const val = target * eased;
+        const text = decimals > 0 ? val.toFixed(decimals) : Math.round(val).toLocaleString('es-CO');
+        el.textContent = prefix + text + suffix;
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }, { threshold: 0.6 });
+  counters.forEach(el => counterObserver.observe(el));
 });

@@ -81,6 +81,8 @@
 </head>
 <body>
 
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
   <!-- ======= NAVBAR ======= -->
@@ -151,8 +153,8 @@
       <p class="hero__sub">STUDIO</p>
       <p class="hero__lead">Cuidado facial y corporal con protocolos personalizados. Tu piel, en equilibrio.</p>
       <div class="hero__actions">
-        <a href="#contacto" class="btn btn--gold">Agendar cita</a>
-        <a href="#servicios" class="btn btn--ghost">Ver servicios</a>
+        <a href="#contacto" class="btn btn--gold magnetic">Agendar cita</a>
+        <a href="#servicios" class="btn btn--ghost magnetic">Ver servicios</a>
       </div>
     </section>
 
@@ -171,9 +173,9 @@
           </ul>
         </div>
         <div class="about__card">
-          <div class="about__stat"><strong>+20</strong><span>años de experiencia</span></div>
-          <div class="about__stat"><strong>+1.200</strong><span>clientas atendidas</span></div>
-          <div class="about__stat"><strong>4.9★</strong><span>calificación promedio</span></div>
+          <div class="about__stat"><strong data-count="20" data-prefix="+">+20</strong><span>años de experiencia</span></div>
+          <div class="about__stat"><strong data-count="1200" data-prefix="+">+1.200</strong><span>clientas atendidas</span></div>
+          <div class="about__stat"><strong data-count="4.9" data-decimals="1" data-suffix="★">4.9★</strong><span>calificación promedio</span></div>
         </div>
       </div>
     </section>
@@ -395,7 +397,7 @@
           </select>
           <label for="message">Mensaje</label>
           <textarea id="message" name="message" rows="3" placeholder="Cuéntanos qué necesitas"></textarea>
-          <button type="submit" class="btn btn--gold btn--full">Enviar por WhatsApp</button>
+          <button type="submit" class="btn btn--gold btn--full magnetic">Enviar por WhatsApp</button>
           <p class="form__note" id="formNote" role="status"></p>
         </form>
       </div>

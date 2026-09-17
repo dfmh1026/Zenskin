@@ -18,6 +18,12 @@
   --champan: #EFE6D2;
   --tinta: #23301F;
 
+  /* verde esmeralda vivo: solo para fondos/acentos decorativos (nunca texto sobre fondo claro),
+     así no afecta los contrastes AA ya verificados que usan --verde */
+  --esmeralda: #12613F;
+  --esmeralda-claro: #2F9469;
+  --esmeralda-oscuro: #0B4A32;
+
   --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Outfit', system-ui, sans-serif;
 
@@ -169,6 +175,7 @@ h2 .acento, h3 .acento {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  transition: padding .3s ease;
 }
 .nav__brand {
   display: flex;
@@ -224,6 +231,22 @@ h2 .acento, h3 .acento {
 }
 .nav__toggle { display: none; background: none; border: none; }
 
+/* estado compacto del navbar al hacer scroll (activado por JS) */
+.nav--scrolled .nav__inner { padding: .5rem 1.5rem; }
+.nav--scrolled { box-shadow: 0 12px 30px -18px rgba(0, 0, 0, 0.6); }
+
+/* barra de progreso de lectura/scroll */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: var(--grad-oro-brillo);
+  z-index: 200;
+  transition: width .1s linear;
+}
+
 /* ---------- hero ---------- */
 .hero {
   position: relative;
@@ -254,15 +277,70 @@ h2 .acento, h3 .acento {
   object-fit: cover;
   display: block;
 }
-/* capa que oscurece la imagen para que el texto se lea bien */
+/* zoom lento y continuo sobre el video/imagen de fondo (efecto Ken Burns) */
+.hero__media video {
+  animation: heroZoom 24s ease-in-out infinite alternate;
+}
+@keyframes heroZoom {
+  from { transform: scale(1); }
+  to   { transform: scale(1.1); }
+}
+/* capa que oscurece la imagen para que el texto se lea bien, con un grano sutil encima */
 .hero__overlay {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background:
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
     radial-gradient(ellipse at 50% -20%, rgba(201, 162, 75, 0.18), transparent 55%),
     linear-gradient(180deg, rgba(7, 35, 26, 0.72), rgba(14, 59, 38, 0.82) 70%);
+  background-blend-mode: overlay, normal, normal;
 }
+/* manchas de luz esmeralda/dorada que flotan lentamente sobre el video */
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  border-radius: 50%;
+  filter: blur(70px);
+  mix-blend-mode: screen;
+  opacity: .45;
+  pointer-events: none;
+}
+.hero::before {
+  width: 480px; height: 480px;
+  top: -140px; left: -100px;
+  background: var(--esmeralda-claro);
+  animation: auroraA 18s ease-in-out infinite;
+}
+.hero::after {
+  width: 380px; height: 380px;
+  bottom: -120px; right: -80px;
+  background: var(--oro);
+  animation: auroraB 22s ease-in-out infinite;
+}
+@keyframes auroraA {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(60px, 40px) scale(1.15); }
+}
+@keyframes auroraB {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(-50px, -30px) scale(1.1); }
+}
+/* la misma textura de grano, para las secciones oscuras (servicios y contacto) */
+.section--dark::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: .05;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.section--dark { position: relative; overflow: hidden; }
+.section--dark .section__inner { position: relative; z-index: 2; }
 /* el contenido del hero va por encima de la imagen y la capa */
 .hero > :not(.hero__media):not(.hero__overlay) { position: relative; z-index: 2; }
 .hero__ornament { width: min(220px, 55vw); margin-bottom: 1rem; opacity: 0; animation: fadeUp 1s ease .1s forwards; }
@@ -396,8 +474,11 @@ h2 .acento, h3 .acento {
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-top: 2.5rem;
+  perspective: 1200px;
 }
 .card {
+  --mx: 50%;
+  --my: 50%;
   position: relative;
   overflow: hidden;
   background: linear-gradient(160deg, rgba(247, 244, 236, 0.07), rgba(247, 244, 236, 0.02));
@@ -407,6 +488,18 @@ h2 .acento, h3 .acento {
   color: var(--perla);
   transition: transform .3s cubic-bezier(.2,.8,.2,1), border-color .3s ease, box-shadow .3s ease;
 }
+/* brillo que sigue al cursor (activado por JS vía --mx/--my) */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(240px circle at var(--mx) var(--my), rgba(232, 206, 140, 0.16), transparent 60%);
+  transition: opacity .3s ease;
+}
+.card:hover::after { opacity: 1; }
 /* línea dorada superior que aparece al pasar el cursor */
 .card::before {
   content: "";
