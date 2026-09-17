@@ -25,6 +25,11 @@
       <h1 id="patientName"></h1>
       <p class="muted" id="patientSub"></p>
 
+      <div class="patient-toolbar">
+        <button class="btn btn--oro btn--sm" id="topNewEntryBtn">+ Nueva entrada</button>
+        <button class="btn btn--ghost btn--sm" id="topHistorialBtn">Ver historial</button>
+      </div>
+
       <div class="totales card" id="totalesCard">
         <div class="item">
           <div class="num" id="totFacturado">$0</div>
@@ -76,15 +81,10 @@
         </form>
       </div>
 
-      <h2>Historia clínica</h2>
-
-      <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center">
-          <h3 style="margin:0">Registrar nueva visita / procedimiento</h3>
-          <button class="btn btn--oro btn--sm" id="toggleNewEntry">+ Nueva entrada</button>
-        </div>
+      <div class="card hidden" id="newEntryCard">
+        <h3 style="margin:0 0 .8rem">Registrar nueva visita / procedimiento</h3>
         <div id="entryMsg"></div>
-        <form id="entryForm" class="hidden" style="margin-top:.8rem">
+        <form id="entryForm">
           <div class="grid-2">
             <div class="field"><label>Fecha *</label><input id="e_fecha" type="date" required /></div>
             <div class="field">
@@ -137,7 +137,10 @@
         </form>
       </div>
 
-      <div id="entriesList"></div>
+      <div id="historialPanel" class="hidden">
+        <h2>Historia clínica</h2>
+        <div id="entriesList"></div>
+      </div>
     </div>
   </main>
 

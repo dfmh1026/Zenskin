@@ -430,17 +430,41 @@ document.getElementById("patientForm").addEventListener("submit", async (e) => {
   await loadAll();
 });
 
-// ---- Nueva entrada de historia clínica ----
+// ---- Pestañas superiores: Nueva entrada / Historial (mutuamente excluyentes) ----
 const entryForm = document.getElementById("entryForm");
-document.getElementById("toggleNewEntry").addEventListener("click", () => {
-  entryForm.classList.toggle("hidden");
-  if (!entryForm.classList.contains("hidden")) {
-    document.getElementById("e_fecha").value = new Date().toISOString().slice(0, 10);
-  }
+const newEntryCard = document.getElementById("newEntryCard");
+const historialPanel = document.getElementById("historialPanel");
+const topNewEntryBtn = document.getElementById("topNewEntryBtn");
+const topHistorialBtn = document.getElementById("topHistorialBtn");
+
+function showNewEntry() {
+  newEntryCard.classList.remove("hidden");
+  entryForm.classList.remove("hidden");
+  document.getElementById("entryMsg").innerHTML = "";
+  historialPanel.classList.add("hidden");
+  document.getElementById("e_fecha").value = new Date().toISOString().slice(0, 10);
+}
+function showHistorial() {
+  historialPanel.classList.remove("hidden");
+  newEntryCard.classList.add("hidden");
+}
+function closePanels() {
+  newEntryCard.classList.add("hidden");
+  historialPanel.classList.add("hidden");
+}
+
+topNewEntryBtn.addEventListener("click", () => {
+  // si la tarjeta está abierta mostrando el mensaje de "entrada guardada"
+  // (formulario oculto), reabre un formulario en blanco en vez de cerrar
+  const activo = !newEntryCard.classList.contains("hidden") && !entryForm.classList.contains("hidden");
+  activo ? closePanels() : showNewEntry();
+});
+topHistorialBtn.addEventListener("click", () => {
+  historialPanel.classList.contains("hidden") ? showHistorial() : closePanels();
 });
 document.getElementById("cancelNewEntry").addEventListener("click", () => {
   entryForm.reset();
-  entryForm.classList.add("hidden");
+  closePanels();
 });
 
 entryForm.addEventListener("submit", async (e) => {
