@@ -46,6 +46,18 @@ a { color: inherit; }
   text-decoration: none;
 }
 
+/* el botón "Cerrar sesión" vive sobre el fondo oscuro del navbar:
+   .btn--ghost por defecto usa texto/borde verde oscuro (pensado para
+   fondos blancos) y ahí queda invisible, así que lo repintamos claro */
+.admin-nav .btn--ghost {
+  color: var(--champan);
+  border-color: rgba(239, 230, 210, 0.45);
+}
+.admin-nav .btn--ghost:hover {
+  background: rgba(239, 230, 210, 0.12);
+  border-color: var(--champan);
+}
+
 .admin-nav__right {
   display: flex;
   align-items: center;
