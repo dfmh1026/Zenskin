@@ -115,6 +115,49 @@ async function signedUrl(path) {
   return error ? null : data.signedUrl;
 }
 
+// Reduce el peso de la foto (redimensiona + recomprime a JPEG) antes de subirla.
+// Si el navegador no puede decodificar el formato (p. ej. algunos .heic), sube el original.
+async function compressImage(file, { maxDim = 1600, quality = 0.8 } = {}) {
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height));
+    const width = Math.round(bitmap.width * scale);
+    const height = Math.round(bitmap.height * scale);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    canvas.getContext("2d").drawImage(bitmap, 0, 0, width, height);
+
+    const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", quality));
+    if (!blob) return file;
+
+    const newName = file.name.replace(/\.[^.]+$/, "") + ".jpg";
+    return new File([blob], newName, { type: "image/jpeg" });
+  } catch {
+    return file;
+  }
+}
+
+async function subirFoto(entryId, file, etiqueta) {
+  const optimizado = await compressImage(file);
+  const safeName = optimizado.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
+  const path = `${patientId}/${entryId}/${Date.now()}-${safeName}`;
+
+  const { error: uploadError } = await supabase.storage.from("fotos-pacientes").upload(path, optimizado, { upsert: false });
+  if (uploadError) return { error: uploadError };
+
+  const { error: dbError } = await supabase.from("entrada_fotos").insert({
+    entrada_id: entryId,
+    paciente_id: patientId,
+    storage_path: path,
+    etiqueta,
+    created_by: auth.staff.id,
+  });
+
+  return { error: dbError, path };
+}
+
 async function renderEntries() {
   const list = document.getElementById("entriesList");
   list.innerHTML = "";
@@ -140,6 +183,7 @@ async function renderEntries() {
     div.innerHTML = `
       <div class="entry__meta">
         <span>${fmtDate(entry.fecha)} · ${entry.tipo}${entry.profesional ? " · " + entry.profesional : ""}</span>
+        <button class="btn btn--ghost btn--sm" type="button" data-role="print-btn">Imprimir / PDF</button>
       </div>
       ${entry.motivo ? `<div class="entry__row"><strong>Motivo:</strong> ${entry.motivo}</div>` : ""}
       ${entry.diagnostico ? `<div class="entry__row"><strong>Diagnóstico:</strong> ${entry.diagnostico}</div>` : ""}
@@ -174,7 +218,114 @@ async function renderEntries() {
 
     const uploadBtn = div.querySelector('[data-role="upload-btn"]');
     uploadBtn.addEventListener("click", () => uploadPhotos(entry, div));
+
+    const printBtn = div.querySelector('[data-role="print-btn"]');
+    printBtn.addEventListener("click", () => printEntry(entry));
   }
+}
+
+// ---- Exportar / imprimir resumen de una entrada (hoja carta) ----
+function buildPrintableHtml(entry) {
+  const pays = paymentsByEntry[entry.id] ?? [];
+  const paysRows = pays.map((pay) => `
+    <tr>
+      <td>${pay.servicio}</td>
+      <td>${money(pay.precio)}</td>
+      <td>${money(pay.abono)}</td>
+      <td>${money(Number(pay.precio || 0) - Number(pay.abono || 0))}</td>
+      <td>${pay.metodo_pago ?? "—"}</td>
+    </tr>`).join("");
+
+  const row = (label, value) => value
+    ? `<div><div class="label">${label}</div><div class="value">${value}</div></div>`
+    : "";
+
+  return `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>Resumen de atención — ${patient.nombre_completo}</title>
+<style>
+  @page { size: letter; margin: 1.8cm 1.6cm; }
+  * { box-sizing: border-box; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: #23301F; margin: 0; }
+  .doc-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-bottom: 2px solid #C9A24B; padding-bottom: .5rem; margin-bottom: 1.2rem;
+  }
+  .doc-header h1 { font-size: 1.4rem; margin: 0; color: #07231A; }
+  .doc-header span { font-size: .8rem; color: #806224; }
+  h2 {
+    font-size: 1rem; color: #806224; text-transform: uppercase; letter-spacing: .04em;
+    margin: 1.2rem 0 .5rem; border-bottom: 1px solid #d9d2c2; padding-bottom: .2rem;
+  }
+  .row { display: flex; flex-wrap: wrap; gap: .3rem 2rem; margin-bottom: .3rem; }
+  .row > div { min-width: 220px; }
+  .row--full > div { min-width: 100%; }
+  .label { font-weight: 700; font-size: .78rem; color: #7a7566; text-transform: uppercase; }
+  .value { font-size: .95rem; white-space: pre-wrap; }
+  table { width: 100%; border-collapse: collapse; margin-top: .4rem; font-size: .88rem; }
+  th, td { text-align: left; padding: .4rem .3rem; border-bottom: 1px solid #eee5d3; }
+  .footer { margin-top: 2rem; font-size: .72rem; color: #7a7566; text-align: center; }
+</style>
+</head>
+<body>
+  <div class="doc-header">
+    <h1>Zen Skin Studio</h1>
+    <span>Generado el ${new Date().toLocaleDateString("es-CO")}</span>
+  </div>
+
+  <h2>Datos del paciente</h2>
+  <div class="row">
+    ${row("Nombre", patient.nombre_completo)}
+    ${row("Cédula", patient.cedula)}
+  </div>
+  <div class="row">
+    ${row("Fecha de nacimiento", fmtDate(patient.fecha_nacimiento))}
+    ${row("Género", patient.genero)}
+  </div>
+  <div class="row">
+    ${row("Teléfono", patient.telefono)}
+    ${row("Correo", patient.email)}
+  </div>
+
+  <h2>Atención del ${fmtDate(entry.fecha)}</h2>
+  <div class="row">
+    ${row("Tipo", entry.tipo)}
+    ${row("Profesional", entry.profesional)}
+  </div>
+  <div class="row row--full">${row("Motivo", entry.motivo)}</div>
+  <div class="row row--full">${row("Diagnóstico", entry.diagnostico)}</div>
+  <div class="row row--full">${row("Tratamiento realizado", entry.tratamiento_realizado)}</div>
+  <div class="row row--full">${row("Productos usados", entry.productos_usados)}</div>
+  <div class="row row--full">${row("Observaciones", entry.observaciones)}</div>
+  <div class="row">${row("Próxima cita", entry.proxima_cita ? fmtDate(entry.proxima_cita) : "")}</div>
+
+  ${pays.length ? `
+  <h2>Cobro asociado</h2>
+  <table>
+    <thead><tr><th>Servicio</th><th>Precio</th><th>Abono</th><th>Saldo</th><th>Método</th></tr></thead>
+    <tbody>${paysRows}</tbody>
+  </table>` : ""}
+
+  <div class="footer">Documento generado desde el panel administrativo de Zen Skin Studio.</div>
+</body>
+</html>`;
+}
+
+function printEntry(entry) {
+  const win = window.open("", "_blank", "width=850,height=1100");
+  if (!win) {
+    alert("El navegador bloqueó la ventana de impresión. Permite ventanas emergentes para este sitio.");
+    return;
+  }
+  win.document.open();
+  win.document.write(buildPrintableHtml(entry));
+  win.document.close();
+  win.onload = () => {
+    win.focus();
+    win.print();
+  };
 }
 
 async function uploadPhotos(entry, entryEl) {
@@ -188,30 +339,14 @@ async function uploadPhotos(entry, entryEl) {
     return;
   }
 
-  status.textContent = "Subiendo…";
   const etiqueta = etiquetaSel.value;
   const grid = entryEl.querySelector('[data-role="photo-grid"]');
 
   for (const file of files) {
-    const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-    const path = `${patientId}/${entry.id}/${Date.now()}-${safeName}`;
-
-    const { error: uploadError } = await supabase.storage.from("fotos-pacientes").upload(path, file, { upsert: false });
-    if (uploadError) {
-      status.textContent = `Error subiendo ${file.name}: ${uploadError.message}`;
-      continue;
-    }
-
-    const { error: dbError } = await supabase.from("entrada_fotos").insert({
-      entrada_id: entry.id,
-      paciente_id: patientId,
-      storage_path: path,
-      etiqueta,
-      created_by: auth.staff.id,
-    });
-
-    if (dbError) {
-      status.textContent = `Foto subida pero no se pudo registrar: ${dbError.message}`;
+    status.textContent = `Optimizando y subiendo ${file.name}…`;
+    const { error, path } = await subirFoto(entry.id, file, etiqueta);
+    if (error) {
+      status.textContent = `Error subiendo ${file.name}: ${error.message}`;
       continue;
     }
 
@@ -312,6 +447,17 @@ entryForm.addEventListener("submit", async (e) => {
     return;
   }
 
+  const errores = [];
+
+  const fotoFiles = Array.from(document.getElementById("e_fotos").files ?? []);
+  if (fotoFiles.length) {
+    const etiquetaFoto = document.getElementById("e_foto_etiqueta").value || "otro";
+    for (const file of fotoFiles) {
+      const { error: fotoError } = await subirFoto(newEntry.id, file, etiquetaFoto);
+      if (fotoError) errores.push(`No se pudo subir ${file.name}: ${fotoError.message}`);
+    }
+  }
+
   const servicio = g("e_servicio");
   const precio = document.getElementById("e_precio").value;
   if (servicio || precio) {
@@ -329,14 +475,18 @@ entryForm.addEventListener("submit", async (e) => {
       estado: abonoNum >= precioNum && precioNum > 0 ? "pagado" : abonoNum > 0 ? "parcial" : "pendiente",
       created_by: auth.staff.id,
     });
-    if (payError) {
-      msg.innerHTML = `<div class="msg msg--error">Entrada guardada, pero el cobro no se pudo registrar: ${payError.message}</div>`;
-    }
+    if (payError) errores.push(`El cobro no se pudo registrar: ${payError.message}`);
   }
 
   entryForm.reset();
   entryForm.classList.add("hidden");
   await loadAll();
+
+  const erroresHtml = errores.map((e) => `<div class="msg msg--error">${e}</div>`).join("");
+  msg.innerHTML = `${erroresHtml}<div class="msg msg--ok">Entrada guardada. <button class="btn btn--sm btn--ghost" type="button" id="printJustSaved">Imprimir / PDF</button></div>`;
+  document.getElementById("printJustSaved").addEventListener("click", () => {
+    printEntry({ ...entryPayload, id: newEntry.id });
+  });
 });
 
 loadAll();

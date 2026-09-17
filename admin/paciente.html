@@ -52,7 +52,13 @@
               <div class="field"><label>Cédula / documento</label><input id="p_cedula" required /></div>
               <div class="field"><label>Nombre completo</label><input id="p_nombre" required /></div>
               <div class="field"><label>Fecha de nacimiento</label><input id="p_nacimiento" type="date" /></div>
-              <div class="field"><label>Género</label><input id="p_genero" /></div>
+              <div class="field"><label>Género</label>
+                <select id="p_genero">
+                  <option value="">Seleccionar…</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Femenino">Femenino</option>
+                </select>
+              </div>
               <div class="field"><label>Teléfono</label><input id="p_telefono" /></div>
               <div class="field"><label>Correo</label><input id="p_email" type="email" /></div>
             </div>
@@ -98,6 +104,22 @@
           <div class="grid-2">
             <div class="field"><label>Próxima cita</label><input id="e_proxima" type="date" /></div>
             <div class="field"><label>Profesional</label><input id="e_profesional" /></div>
+          </div>
+
+          <h3>Foto del paciente (opcional)</h3>
+          <div class="grid-2">
+            <div class="field">
+              <label>Etiqueta</label>
+              <select id="e_foto_etiqueta">
+                <option value="antes">Antes</option>
+                <option value="despues">Después</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Fotos (cualquier formato de imagen)</label>
+              <input id="e_fotos" type="file" accept="image/*" multiple />
+            </div>
           </div>
 
           <h3>Cobro de esta visita (opcional)</h3>

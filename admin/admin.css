@@ -205,6 +205,9 @@ table.list tr:hover td { background: var(--champan); }
 .entry__meta {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .4rem;
   font-size: .8rem;
   color: var(--oro-texto);
   margin-bottom: .4rem;
