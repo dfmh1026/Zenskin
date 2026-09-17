@@ -147,15 +147,49 @@ async function subirFoto(entryId, file, etiqueta) {
   const { error: uploadError } = await supabase.storage.from("fotos-pacientes").upload(path, optimizado, { upsert: false });
   if (uploadError) return { error: uploadError };
 
-  const { error: dbError } = await supabase.from("entrada_fotos").insert({
-    entrada_id: entryId,
-    paciente_id: patientId,
-    storage_path: path,
-    etiqueta,
-    created_by: auth.staff.id,
-  });
+  const { data: inserted, error: dbError } = await supabase
+    .from("entrada_fotos")
+    .insert({
+      entrada_id: entryId,
+      paciente_id: patientId,
+      storage_path: path,
+      etiqueta,
+      created_by: auth.staff.id,
+    })
+    .select("id")
+    .single();
 
-  return { error: dbError, path };
+  return { error: dbError, path, id: inserted?.id };
+}
+
+// construye una <figure> con la foto y un botón para eliminarla
+function renderPhotoFigure(photo, url, grid) {
+  const fig = document.createElement("figure");
+  fig.innerHTML = `
+    <a href="${url}" target="_blank" rel="noopener"><img src="${url}" alt="${photo.descripcion ?? photo.etiqueta}" loading="lazy" /></a>
+    <figcaption>${photo.etiqueta}</figcaption>
+    <button type="button" class="photo-delete" title="Eliminar foto" aria-label="Eliminar foto">&times;</button>
+  `;
+  fig.querySelector(".photo-delete").addEventListener("click", () => deletePhoto(photo, fig));
+  grid.appendChild(fig);
+}
+
+async function deletePhoto(photo, figEl) {
+  if (!confirm("¿Eliminar esta foto? Esta acción no se puede deshacer.")) return;
+
+  const { error: storageError } = await supabase.storage.from("fotos-pacientes").remove([photo.storage_path]);
+  if (storageError) {
+    alert(`No se pudo eliminar la foto: ${storageError.message}`);
+    return;
+  }
+
+  const { error: dbError } = await supabase.from("entrada_fotos").delete().eq("id", photo.id);
+  if (dbError) {
+    alert(`La foto se borró del almacenamiento, pero no se pudo quitar del registro: ${dbError.message}`);
+    return;
+  }
+
+  figEl.remove();
 }
 
 async function renderEntries() {
@@ -211,9 +245,7 @@ async function renderEntries() {
     for (const photo of photosByEntry[entry.id] ?? []) {
       const url = await signedUrl(photo.storage_path);
       if (!url) continue;
-      const fig = document.createElement("figure");
-      fig.innerHTML = `<a href="${url}" target="_blank" rel="noopener"><img src="${url}" alt="${photo.descripcion ?? photo.etiqueta}" loading="lazy" /></a><figcaption>${photo.etiqueta}</figcaption>`;
-      grid.appendChild(fig);
+      renderPhotoFigure(photo, url, grid);
     }
 
     const uploadBtn = div.querySelector('[data-role="upload-btn"]');
@@ -344,18 +376,14 @@ async function uploadPhotos(entry, entryEl) {
 
   for (const file of files) {
     status.textContent = `Optimizando y subiendo ${file.name}…`;
-    const { error, path } = await subirFoto(entry.id, file, etiqueta);
+    const { error, path, id } = await subirFoto(entry.id, file, etiqueta);
     if (error) {
       status.textContent = `Error subiendo ${file.name}: ${error.message}`;
       continue;
     }
 
     const url = await signedUrl(path);
-    if (url) {
-      const fig = document.createElement("figure");
-      fig.innerHTML = `<a href="${url}" target="_blank" rel="noopener"><img src="${url}" alt="${etiqueta}" loading="lazy" /></a><figcaption>${etiqueta}</figcaption>`;
-      grid.appendChild(fig);
-    }
+    if (url) renderPhotoFigure({ id, storage_path: path, etiqueta }, url, grid);
   }
 
   status.textContent = "Listo.";
@@ -483,9 +511,16 @@ entryForm.addEventListener("submit", async (e) => {
   await loadAll();
 
   const erroresHtml = errores.map((e) => `<div class="msg msg--error">${e}</div>`).join("");
-  msg.innerHTML = `${erroresHtml}<div class="msg msg--ok">Entrada guardada. <button class="btn btn--sm btn--ghost" type="button" id="printJustSaved">Imprimir / PDF</button></div>`;
+  msg.innerHTML = `${erroresHtml}<div class="msg msg--ok">
+    Entrada guardada.
+    <button class="btn btn--sm btn--ghost" type="button" id="printJustSaved">Imprimir / PDF</button>
+    <button class="btn btn--sm btn--oro" type="button" id="finishEntry">Finalizar</button>
+  </div>`;
   document.getElementById("printJustSaved").addEventListener("click", () => {
     printEntry({ ...entryPayload, id: newEntry.id });
+  });
+  document.getElementById("finishEntry").addEventListener("click", () => {
+    window.location.href = "./index.html";
   });
 });
 
