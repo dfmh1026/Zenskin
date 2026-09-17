@@ -27,6 +27,26 @@
       </div>
 
       <button class="btn" type="submit" id="loginBtn" style="width:100%">Ingresar</button>
+      <p style="text-align:center; margin-top:1rem">
+        <a href="#" id="forgotLink" class="muted">¿Olvidaste tu contraseña?</a>
+      </p>
+    </form>
+
+    <form class="login-card hidden" id="recoverForm" novalidate style="margin-top:1rem">
+      <h1 style="font-size:1.3rem">Recuperar contraseña</h1>
+      <p class="sub">Te enviaremos un enlace a tu correo para elegir una contraseña nueva</p>
+
+      <div id="recoverMsg"></div>
+
+      <div class="field">
+        <label for="recoverEmail">Correo</label>
+        <input id="recoverEmail" name="email" type="email" autocomplete="username" required />
+      </div>
+
+      <button class="btn" type="submit" id="recoverBtn" style="width:100%">Enviar enlace</button>
+      <p style="text-align:center; margin-top:1rem">
+        <a href="#" id="backToLoginLink" class="muted">Volver a iniciar sesión</a>
+      </p>
     </form>
   </div>
 
@@ -36,6 +56,42 @@
     const form = document.getElementById("loginForm");
     const msgEl = document.getElementById("loginMsg");
     const btn = document.getElementById("loginBtn");
+
+    // ---- Alternar entre "Ingresar" y "Recuperar contraseña" ----
+    const recoverForm = document.getElementById("recoverForm");
+    const recoverMsg = document.getElementById("recoverMsg");
+    const recoverBtn = document.getElementById("recoverBtn");
+
+    document.getElementById("forgotLink").addEventListener("click", (e) => {
+      e.preventDefault();
+      form.classList.add("hidden");
+      recoverForm.classList.remove("hidden");
+    });
+    document.getElementById("backToLoginLink").addEventListener("click", (e) => {
+      e.preventDefault();
+      recoverForm.classList.add("hidden");
+      form.classList.remove("hidden");
+    });
+
+    recoverForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      recoverBtn.disabled = true;
+      recoverMsg.innerHTML = "";
+
+      const email = document.getElementById("recoverEmail").value.trim();
+      const redirectTo = new URL("./reset-password.html", window.location.href).href;
+
+      const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+
+      if (error) {
+        recoverMsg.innerHTML = `<div class="msg msg--error">No se pudo enviar el enlace: ${error.message}</div>`;
+        recoverBtn.disabled = false;
+        return;
+      }
+
+      recoverMsg.innerHTML = `<div class="msg msg--ok">Listo. Revisa tu correo y sigue el enlace para elegir una contraseña nueva.</div>`;
+      recoverBtn.disabled = false;
+    });
 
     function showMsg(text, type) {
       msgEl.innerHTML = `<div class="msg msg--${type}">${text}</div>`;
