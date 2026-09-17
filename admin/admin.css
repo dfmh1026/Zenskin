@@ -274,12 +274,28 @@ table.list tr:hover td { background: var(--champan); }
 .msg--error { background: #f6d9d6; color: var(--rojo); }
 .msg--ok { background: #dcefdf; color: #1b6b34; }
 
-.patient-toolbar {
+.tabs {
   display: flex;
-  gap: .7rem;
+  gap: .3rem;
   flex-wrap: wrap;
-  margin: 1rem 0 1.4rem;
+  border-bottom: 2px solid #eee5d3;
+  margin: 1.2rem 0 1.4rem;
 }
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  padding: .75rem 1.1rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: .88rem;
+  color: var(--oro-texto);
+  cursor: pointer;
+  transition: color .2s ease, border-color .2s ease;
+}
+.tab-btn:hover { color: var(--verde-noche); }
+.tab-btn.active { color: var(--verde-noche); border-bottom-color: var(--oro); }
 
 .totales {
   display: flex;

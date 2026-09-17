@@ -430,41 +430,36 @@ document.getElementById("patientForm").addEventListener("submit", async (e) => {
   await loadAll();
 });
 
-// ---- Pestañas superiores: Nueva entrada / Historial (mutuamente excluyentes) ----
+// ---- Pestañas: Datos del paciente / Historial / Nueva entrada ----
 const entryForm = document.getElementById("entryForm");
-const newEntryCard = document.getElementById("newEntryCard");
-const historialPanel = document.getElementById("historialPanel");
-const topNewEntryBtn = document.getElementById("topNewEntryBtn");
-const topHistorialBtn = document.getElementById("topHistorialBtn");
 
-function showNewEntry() {
-  newEntryCard.classList.remove("hidden");
+const tabs = [
+  { btn: document.getElementById("tabBtnDatos"), panel: document.getElementById("tabPanelDatos") },
+  { btn: document.getElementById("tabBtnHistorial"), panel: document.getElementById("tabPanelHistorial") },
+  { btn: document.getElementById("tabBtnNueva"), panel: document.getElementById("tabPanelNueva") },
+];
+
+function goToTab(targetBtn) {
+  tabs.forEach(({ btn, panel }) => {
+    const active = btn === targetBtn;
+    btn.classList.toggle("active", active);
+    btn.setAttribute("aria-selected", String(active));
+    panel.classList.toggle("hidden", !active);
+  });
+}
+
+tabs.forEach(({ btn }) => btn.addEventListener("click", () => goToTab(btn)));
+
+// al abrir la pestaña de "Nueva entrada" siempre queda lista para capturar
+document.getElementById("tabBtnNueva").addEventListener("click", () => {
   entryForm.classList.remove("hidden");
   document.getElementById("entryMsg").innerHTML = "";
-  historialPanel.classList.add("hidden");
   document.getElementById("e_fecha").value = new Date().toISOString().slice(0, 10);
-}
-function showHistorial() {
-  historialPanel.classList.remove("hidden");
-  newEntryCard.classList.add("hidden");
-}
-function closePanels() {
-  newEntryCard.classList.add("hidden");
-  historialPanel.classList.add("hidden");
-}
+});
 
-topNewEntryBtn.addEventListener("click", () => {
-  // si la tarjeta está abierta mostrando el mensaje de "entrada guardada"
-  // (formulario oculto), reabre un formulario en blanco en vez de cerrar
-  const activo = !newEntryCard.classList.contains("hidden") && !entryForm.classList.contains("hidden");
-  activo ? closePanels() : showNewEntry();
-});
-topHistorialBtn.addEventListener("click", () => {
-  historialPanel.classList.contains("hidden") ? showHistorial() : closePanels();
-});
 document.getElementById("cancelNewEntry").addEventListener("click", () => {
   entryForm.reset();
-  closePanels();
+  goToTab(document.getElementById("tabBtnDatos"));
 });
 
 entryForm.addEventListener("submit", async (e) => {
